@@ -10,18 +10,6 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    pPrice: {
-        type: Number,
-        required: true
-    },
-    pSold: {
-        type: Number,
-        default: 0
-    },
-    pQuantity: {
-        type: Number,
-        default: 0
-    },
     pCategory: {
         type: ObjectId,
         ref: "categories"
@@ -32,7 +20,11 @@ const productSchema = new mongoose.Schema({
     },
     pOffer: {
         type: String,
-        default: null
+        required: true
+    },
+    pFile: {
+        type: String,
+        required: true
     },
     pRatingsReviews: [{
         review: String,

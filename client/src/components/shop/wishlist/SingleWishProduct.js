@@ -7,6 +7,7 @@ const Product = () => {
 
     const history = useHistory()
     const [products, setProducts] = useState([])
+    console.log(products);
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -50,7 +51,7 @@ const Product = () => {
                         <div className="text-lg md:ml-6 truncate">{product.pName}</div>
                       </div>
                       <div className="md:w-1/2 md:flex md:items-center md:justify-around">
-                        <div className="font-semibold text-gray-600">${product.pPrice}.00</div>
+                        <div className="font-semibold text-gray-600">{product.pCategory.cName}</div>
                         {
                           product.pQuantity > 0
                           ? <div className="text-green-500 my-1 md:my-0">In Stock</div>
@@ -77,7 +78,6 @@ const SingleWishProduct = (props) => {
     return (
         <Fragment>
           <section className="mx-4 mt-20 md:mx-12 md:mt-32 lg:mt-24">
-            <div className="text-2xl mx-2 mb-6">Wishlist</div>
             {/* Product List */}
             <Product/>
           </section>

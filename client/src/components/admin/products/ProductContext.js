@@ -9,9 +9,8 @@ export const productState = {
         pImages: null,
         pStatus: "",
         pCategory: "",
-        pQuantity: "",
-        pPrice: "",
-        pOffer: ""
+        pOffer: "",
+        pFile: ""
     }
 }
 
@@ -41,9 +40,8 @@ export const productReducer = (state, action) => {
                     pImages: action.product.pImages,
                     pStatus: action.product.pStatus,
                     pCategory: action.product.pCategory,
-                    pQuantity: action.product.pQuantity,
-                    pPrice: action.product.pPrice,
-                    pOffer: action.product.pOffer
+                    pOffer: action.product.pOffer,
+                    pFile: action.product.pFile
                 }
             }
         case 'editProductModalClose':
@@ -57,9 +55,8 @@ export const productReducer = (state, action) => {
                     pImages: null,
                     pStatus: "",
                     pCategory: "",
-                    pQuantity: "",
-                    pPrice: "",
-                    pOffer: ""
+                    pOffer: "",
+                    pFile: "",
                 }
             }
         default:

@@ -58,8 +58,9 @@ const AllProduct = (props) => {
                   <th className="px-4 py-2 border">Description</th>
                   <th className="px-4 py-2 border">Image</th>
                   <th className="px-4 py-2 border">Status</th>
-                  <th className="px-4 py-2 border">Stock</th>
-                  <th className="px-4 py-2 border">Category</th>
+                  <th className="px-4 py-2 border">File Name</th>
+                  {/* <th className="px-4 py-2 border">Stock</th> */}
+                  <th className="px-4 py-2 border">Subject</th>
                   <th className="px-4 py-2 border">Offer</th>
                   <th className="px-4 py-2 border">Created at</th>
                   <th className="px-4 py-2 border">Updated at</th>
@@ -102,7 +103,8 @@ const ProductTable = ({ product, deleteProduct, editProduct }) => {
                 : <span className="bg-red-200 rounded-full text-center text-xs px-2 font-semibold">{product.pStatus}</span>
               }
             </td>
-            <td className="p-2 text-center">{product.pQuantity}</td>     
+            {/* <td className="p-2 text-center">{product.pQuantity}</td>      */}
+            <td className="p-2 text-left">{product.pFile.slice(0,15)}...</td>  
             <td className="p-2 text-center">{product.pCategory.cName}</td>     
             <td className="p-2 text-center">{product.pOffer}</td>     
             <td className="p-2 text-center">{moment(product.createdAt).format('lll')}</td>     

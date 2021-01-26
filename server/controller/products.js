@@ -17,7 +17,7 @@ class Product {
 
     async getAllProduct(req, res) {
         try {
-            let Products = await productModel.find({}).populate("pCategory", "_id cName").sort({ _id: -1 })
+            let Products = await productModel.find({}).populate("pCategory", "_id cName cImage").sort({ _id: -1 })
             if (Products) {
                 return res.json({ Products })
             }
@@ -27,10 +27,13 @@ class Product {
     }
 
     async postAddProduct(req, res) {
-        let { pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus } = req.body
+        let { pName, pDescription, pCategory, pOffer, pStatus } = req.body
         let images = req.files
+        console.log("Upload images");
+        console.log(images);
+        console.log(images.length);
         // Validate other fileds
-        if (!pName | !pDescription | !pPrice | !pQuantity | !pCategory | !pOffer | !pStatus) {
+        if (!pName | !pDescription | !pCategory | !pOffer | !pStatus) {
             Product.deleteImages(images)
             return res.json({ error: "All filled must be required" })
         }
@@ -40,24 +43,24 @@ class Product {
             return res.json({ error: "Name 255 & Description must not be 3000 charecter long" })
         }
         // Validate Images
-        else if (images.length !== 2) {
+        else if (images.length != 2) {
             Product.deleteImages(images)
-            return res.json({ error: "Must need to provide 2 images" })
+            return res.json({ error: "Must need to upload all required files" })
         } else {
             try {
                 let allImages = [];
                 for (const img of images) {
-                    allImages.push(img.filename)
+                    console.log(img.filename);
                 }
+                allImages.push(images[0].filename);
                 let newProduct = new productModel({
                     pImages: allImages,
                     pName,
                     pDescription,
-                    pPrice,
-                    pQuantity,
                     pCategory,
                     pOffer,
-                    pStatus
+                    pStatus,
+                    pFile: images[1].filename,
                 })
                 let save = await newProduct.save()
                 if (save) {
@@ -71,10 +74,28 @@ class Product {
     }
 
     async postEditProduct(req, res) {
-        let { pId, pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus } = req.body
-
+        let { pId, pName, pDescription, pCategory, pOffer, pStatus } = req.body
+        console.log(req.files.length);
+        console.log(req.files);
+        let editData = {
+            pName,
+            pDescription,
+            pCategory,
+            pOffer,
+            pStatus
+        }
+        req.files.forEach(file => {
+            if (file.fieldname == 'pFile') {
+                editData['pFile'] = file.filename;
+            }
+            if (file.fieldname == 'pImage') {
+                editData['pImages'] = [];
+                editData['pImages'].push(file.filename);
+            }
+        })
+        console.log(editData);
         // Validate other fileds
-        if (!pId | !pName | !pDescription | !pPrice | !pQuantity | !pCategory | !pOffer | !pStatus) {
+        if (!pId | !pName | !pDescription | !pCategory | !pOffer | !pStatus) {
             return res.json({ error: "All filled must be required" })
         }
         // Validate Name and description
@@ -82,15 +103,7 @@ class Product {
             return res.json({ error: "Name 255 & Description must not be 3000 charecter long" })
         } else {
             try {
-                let editProduct = productModel.findByIdAndUpdate(pId, {
-                    pName,
-                    pDescription,
-                    pPrice,
-                    pQuantity,
-                    pCategory,
-                    pOffer,
-                    pStatus
-                })
+                let editProduct = productModel.findByIdAndUpdate(pId, editData)
                 editProduct.exec(err => {
                     if (err) console.log(err);
                     return res.json({ success: "Product edit successfully" })
@@ -150,7 +163,7 @@ class Product {
             return res.json({ error: "All filled must be required" })
         } else {
             try {
-                let products = await productModel.find({ pCategory: catId }).populate('pCategory', 'cName')
+                let products = await productModel.find({ pCategory: catId }).populate('pCategory', 'cName cImage')
                 if (products) {
                     return res.json({ Products: products })
                 }
@@ -182,7 +195,7 @@ class Product {
             return res.json({ error: "All filled must be required" })
         } else {
             try {
-                let wishProducts = await productModel.find({ _id: { $in: productArray } });
+                let wishProducts = await productModel.find({ _id: { $in: productArray } }).populate('pCategory', 'cName');
                 if (wishProducts) {
                     return res.json({ Products: wishProducts })
                 }

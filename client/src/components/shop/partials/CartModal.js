@@ -82,7 +82,7 @@ const CartModal = (props) => {
 					                        <span className="text-sm text-gray-200">{ quantity(item._id) }</span>
 					                      </div>
 					                    </div>
-					                    <div> <span className="text-sm text-gray-400">Subtotoal :</span> ${ subTotal(item._id,item.pPrice) }.00</div> {/* SUbtotal Count */}
+					                    <div> <span className="text-sm text-gray-400">Subtotal :</span> ${ subTotal(item._id,item.pPrice) }.00</div> {/* SUbtotal Count */}
 					                  </div>
 					              	 {/* Cart Product Remove Button */}
 					                  <div onClick={e=> removeCartProduct(item._id)} className="absolute top-0 right-0 text-white">

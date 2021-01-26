@@ -7,10 +7,15 @@ const ProductCategory = (props) => {
 
     return (
         <Fragment>
+			<div className="flex items-center space-x-1 cursor-pointer font-medium">
+				<span className="text-md md:text-lg">Subjects</span>
+				{/* <svg className="w-4 h-4 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg> */}
+			</div>
+			<ProductCategoryDropdown/>
 	    	<div className="flex justify-between font-medium">
-				<div onClick={e=> dispatch({type:"categoryListDropdown",payload:!data.categoryListDropdown})} className={`flex items-center space-x-1 cursor-pointer ${data.categoryListDropdown ? "text-yellow-700" : ""}`}>
-					<span className="text-md md:text-lg hover:text-yellow-700">Categories</span>
-					<svg className="w-4 h-4 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+				<div className="flex items-center space-x-1 cursor-pointer">
+					<span className="text-md md:text-lg">Worksheets</span>
+					{/* <svg className="w-4 h-4 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg> */}
 				</div>
 				<div className="flex space-x-2">
 					<div onClick={e=> dispatch({type:"filterListDropdown",payload:!data.filterListDropdown})} className={`flex items-center space-x-1 cursor-pointer ${data.filterListDropdown ? "text-yellow-700" : ""}`}>
@@ -24,7 +29,8 @@ const ProductCategory = (props) => {
 					</div>
 				</div>
 			</div>
-			<ProductCategoryDropdown/>
+			<br></br>
+			<hr />
 	    </Fragment>
     )
 }

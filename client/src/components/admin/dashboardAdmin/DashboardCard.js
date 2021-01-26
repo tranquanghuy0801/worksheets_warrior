@@ -6,6 +6,8 @@ const DashboardCard = (props) => {
 
     const { data, dispatch } = useContext(DashboardContext)
 
+    console.log(data);
+
     useEffect(() => {
         GetAllData(dispatch)
     }, [])

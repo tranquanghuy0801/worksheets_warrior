@@ -3,3 +3,5 @@ uploads
 images
 package-lock.json
 img
+.env
+.DS_Store

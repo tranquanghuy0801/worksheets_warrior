@@ -2,9 +2,9 @@ export const homeState = {
     categoryListDropdown: false,
     filterListDropdown: false,
     searchDropdown: false,
-    products:null,
-    loading:false,
-    sliderImages:[],
+    products: null,
+    loading: false,
+    sliderImages: [],
 }
 
 export const homeReducer = (state, action) => {
@@ -48,12 +48,12 @@ export const homeReducer = (state, action) => {
         case 'loading':
             return {
                 ...state,
-                loading:action.payload
+                loading: action.payload
             }
         case 'sliderImages':
             return {
                 ...state,
-                sliderImages:action.payload
+                sliderImages: action.payload
             }
         default:
             return state

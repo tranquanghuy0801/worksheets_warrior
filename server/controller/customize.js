@@ -19,6 +19,7 @@ class Customize {
     }
 
     async uploadSlideImage(req, res) {
+        console.log(req);
         let image = req.file.filename
         console.log(image);
         if (!image) {

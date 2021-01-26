@@ -48,3 +48,7 @@ export const prevSlide = (totalImg, slide, setSlide)=> {
 		setSlide(0)
 	}
 }
+
+export const chooseSlide = (index, setSlide)=> {
+	setSlide(index);
+}

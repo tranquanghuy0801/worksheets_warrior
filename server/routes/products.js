@@ -5,7 +5,12 @@ const multer = require('multer');
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, 'public/uploads/products')
+        if (file.fieldname == 'pImage') {
+            cb(null, 'public/uploads/products')
+        } 
+        if (file.fieldname == 'pFile') {
+            cb(null, 'public/uploads/worksheets')
+        }
     },
     filename: function(req, file, cb) {
         cb(null, Date.now() + "_" + file.originalname)
@@ -20,8 +25,8 @@ router.post('/product-by-price', productController.getProductByPrice);
 router.post('/wish-product', productController.getWishProduct);
 router.post('/cart-product', productController.getCartProduct);
 
-router.post('/add-product', upload.any(), productController.postAddProduct);
-router.post('/edit-product', productController.postEditProduct);
+router.post('/add-product', upload.any() , productController.postAddProduct);
+router.post('/edit-product', upload.any(), productController.postEditProduct);
 router.post('/delete-product', productController.getDeleteProduct);
 router.post('/single-product', productController.getSingleProduct);
 

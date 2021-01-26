@@ -20,7 +20,7 @@ export const createPorductImage = async ({ pImage }) => {
     /* Most important part for uploading multiple image  */
 }
 
-export const createProduct = async ({ pName, pDescription, pImage, pStatus, pCategory, pQuantity, pPrice, pOffer }) => {
+export const createProduct = async ({ pName, pDescription, pImage, pStatus, pCategory, pOffer, pFile }) => {
     /* Most important part for uploading multiple image  */
     let formData = new FormData();
     for (const file of pImage) {
@@ -31,12 +31,12 @@ export const createProduct = async ({ pName, pDescription, pImage, pStatus, pCat
     formData.append("pDescription", pDescription)
     formData.append("pStatus", pStatus)
     formData.append("pCategory", pCategory)
-    formData.append("pQuantity", pQuantity)
-    formData.append("pPrice", pPrice)
     formData.append("pOffer", pOffer)
+    formData.append("pFile", pFile)
 
     try {
         let res = await axios.post(`${apiURL}/api/product/add-product`, formData)
+        console.log(res);
         return res.data;
     } catch (error) {
         console.log(error);
@@ -44,18 +44,24 @@ export const createProduct = async ({ pName, pDescription, pImage, pStatus, pCat
 }
 
 export const editProduct = async (product) => {
-    console.log(product);
+    let editFormData = new FormData();
+    editFormData.append("pId", product.pId)
+    editFormData.append("pName", product.pName)
+    editFormData.append("pDescription", product.pDescription)
+    editFormData.append("pStatus", product.pStatus)
+    editFormData.append("pCategory", product.pCategory._id)
+    editFormData.append("pOffer", product.pOffer)
+
+    if (product.pEditFile) {
+        editFormData.append("pFile", product.pEditFile);
+    }
+    if (product.pEditImages) {
+        for (const file of product.pEditImages) {
+            editFormData.append("pImage", file)
+        }
+    }
     try {
-        let res = await axios.post(`${apiURL}/api/product/edit-product`, {
-            pId: product.pId,
-            pName: product.pName,
-            pDescription: product.pDescription,
-            pStatus: product.pStatus,
-            pCategory: product.pCategory,
-            pQuantity: product.pQuantity,
-            pPrice: product.pPrice,
-            pOffer: product.pOffer,
-        })
+        let res = await axios.post(`${apiURL}/api/product/edit-product`, editFormData)
         return res.data;
     } catch (error) {
         console.log(error);
