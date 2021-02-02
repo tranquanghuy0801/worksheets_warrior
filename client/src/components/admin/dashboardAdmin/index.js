@@ -10,22 +10,22 @@ export const DashboardContext = createContext();
 const DashboardComponent = ()=> {
 	return (
 		<Fragment>
-			<DashboardCard/>
+			{/* <DashboardCard/> */}
 			<Customize/>
-			<TodaySell/>
+			{/* <TodaySell/> */}
 		</Fragment>
 	)
 }
 
 const DashboardAdmin = (props) => {
 	const [data,dispatch] = useReducer(dashboardReducer, dashboardState)
-    return (
-        <Fragment>
-	        <DashboardContext.Provider value={{data,dispatch}}> 
-		    	<AdminLayout children={<DashboardComponent/>} />
-		    </DashboardContext.Provider> 
-	    </Fragment>
-    )
+	return (
+		<Fragment>
+			<DashboardContext.Provider value={{data,dispatch}}> 
+				<AdminLayout children={<DashboardComponent/>} />
+			</DashboardContext.Provider> 
+		</Fragment>
+	)
 }
 
 export default DashboardAdmin;

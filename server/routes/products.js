@@ -5,12 +5,7 @@ const multer = require('multer');
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        if (file.fieldname == 'pImage') {
-            cb(null, 'public/uploads/products')
-        } 
-        if (file.fieldname == 'pFile') {
-            cb(null, 'public/uploads/worksheets')
-        }
+        cb(null, 'public/uploads/worksheets')
     },
     filename: function(req, file, cb) {
         cb(null, Date.now() + "_" + file.originalname)

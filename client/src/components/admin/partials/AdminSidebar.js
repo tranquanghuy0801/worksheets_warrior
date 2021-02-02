@@ -16,18 +16,22 @@ const AdminSidebar = (props) => {
             <hr className="border-b border-gray-200" />
             <div onClick={e=> history.push('/admin/dashboard/categories')} className={`${location.pathname === "/admin/dashboard/categories" ? "border-r-4 border-gray-800 bg-gray-100" : ""} hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}>
               <span><svg className="w-8 h-8 text-gray-600 hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg></span>
-              <span className="hover:text-gray-800">Categories</span>
+              <span className="hover:text-gray-800">Subjects</span>
             </div>
             <hr className="border-b border-gray-200" />
             <div onClick={e=> history.push("/admin/dashboard/products")} className={`${location.pathname === "/admin/dashboard/products" ? "border-r-4 border-gray-800 bg-gray-100" : ""} hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}>
               <span><svg className="w-8 h-8 text-gray-600 hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg></span>
-              <span className="hover:text-gray-800">Product</span>
+              <span className="hover:text-gray-800">Worksheets</span>
             </div>
             <hr className="border-b border-gray-200" />
-            <div onClick={e=> history.push('/admin/dashboard/orders')} className={`${location.pathname === "/admin/dashboard/orders" ? "border-r-4 border-gray-800 bg-gray-100" : ""} hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}>
+            <div className={`${location.pathname === "/admin/dashboard/users" ? "border-r-4 border-gray-800 bg-gray-100" : ""} hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}>
+              <span><svg className="w-8 h-8 text-gray-600 hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg></span>
+              <span className="hover:text-gray-800">Users</span>
+            </div>
+            {/* <div onClick={e=> history.push('/admin/dashboard/orders')} className={`${location.pathname === "/admin/dashboard/orders" ? "border-r-4 border-gray-800 bg-gray-100" : ""} hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}>
               <span><svg className="w-8 h-8 text-gray-600 hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg></span>
               <span className="hover:text-gray-800">Order</span>
-            </div>
+            </div> */}
             <hr className="border-b border-gray-200" />
           </div>
         </Fragment>

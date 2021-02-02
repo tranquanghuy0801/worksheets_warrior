@@ -1,17 +1,56 @@
-import React, { Fragment, useContext } from 'react';
-import ProductCategoryDropdown from "./ProductCategoryDropdown";
+import React, { Fragment, useContext , useState } from 'react';
+import { getAllProduct } from "../../admin/products/FetchApi"
 import { HomeContext } from "./index";
+
+const Search = () => {
+
+	const { data, dispatch } = useContext(HomeContext)
+	const [search, setSearch] = useState("")
+	const [productArray, setPa] = useState(null)
+
+	const searchHandle = (e) => {
+		setSearch(e.target.value)
+		fetchData()
+		dispatch({ type: "searchHandleInReducer", payload: e.target.value, productArray: productArray })
+	}
+
+	const fetchData = async () => {
+		dispatch({ type: "loading", payload: true })
+		try {
+			setTimeout(async () => {
+				let responseData = await getAllProduct();
+				if (responseData && responseData.Products) {
+					setPa(responseData.Products)
+					dispatch({ type: "loading", payload: false })
+				}
+			}, 700)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const closeSearchBar = () => {
+		dispatch({ type: "searchDropdown", payload: !data.searchDropdown })
+		fetchData()
+		dispatch({ type: "setProducts", payload: productArray })
+		setSearch("")
+	}
+
+	return (
+		<div className={`${data.searchDropdown ? "" : "hidden"} my-4 flex items-center justify-between`}>
+			<input value={search} onChange={e=> searchHandle(e)} className="px-4 text-xl py-4 focus:outline-none" type="text" placeholder="Search products..." />
+			<div onClick={e=> closeSearchBar()} className="cursor-pointer">
+			  <svg className="w-8 h-8 text-gray-700 hover:bg-gray-200 rounded-full p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+			</div>
+	  	</div>
+	)
+}
 
 const ProductCategory = (props) => {
     const { data, dispatch } = useContext(HomeContext);
 
     return (
         <Fragment>
-			<div className="flex items-center space-x-1 cursor-pointer font-medium">
-				<span className="text-md md:text-lg">Subjects</span>
-				{/* <svg className="w-4 h-4 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg> */}
-			</div>
-			<ProductCategoryDropdown/>
 	    	<div className="flex justify-between font-medium">
 				<div className="flex items-center space-x-1 cursor-pointer">
 					<span className="text-md md:text-lg">Worksheets</span>
@@ -29,6 +68,7 @@ const ProductCategory = (props) => {
 					</div>
 				</div>
 			</div>
+			<Search/>
 			<br></br>
 			<hr />
 	    </Fragment>

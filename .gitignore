@@ -5,3 +5,5 @@ package-lock.json
 img
 .env
 .DS_Store
+build
+test.js

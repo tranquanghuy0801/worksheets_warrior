@@ -16,28 +16,33 @@ const EditProductModal = (props) => {
         pName: "",
         pDescription: "",
         pImages: null,
-        pEditImages: null,
         pStatus: "",
         pCategory: "",
-        pOffer: "",
         pFile: "",
         pEditFile: "",
         error: false,
         success: false,
     })
 
+    let isMounted = true; // note this flag denote mount status
+
     useEffect(() => {
+        isMounted = true;
         fetchCategoryData()
+        return () => { isMounted = false };
     }, [])
 
     const fetchCategoryData = async () => {
         let responseData = await getAllCategory();
-        if (responseData.Categories) {
-            setCategories(responseData.Categories)
+        if (responseData.Categories && isMounted) {
+          setCategories(responseData.Categories)
         }
+
     }
 
     useEffect(() => {
+      isMounted = true;
+      if (isMounted) {
         setEditformdata({
             pId: data.editProductModal.pId,
             pName: data.editProductModal.pName,
@@ -45,9 +50,10 @@ const EditProductModal = (props) => {
             pImages: data.editProductModal.pImages,
             pStatus: data.editProductModal.pStatus,
             pCategory: data.editProductModal.pCategory,
-            pOffer: data.editProductModal.pOffer,
             pFile: data.editProductModal.pFile,
         })
+      }
+      return () => { isMounted = false };
     }, [data.editProductModal])
 
     const fetchData = async () => {
@@ -59,11 +65,6 @@ const EditProductModal = (props) => {
 
     const submitForm = async (e) => {
         e.preventDefault();
-        if (!editformData.pEditImages) {
-            console.log("Image Not upload=============", editformData);
-          } else {
-            console.log("Image uploading");
-        }
         if (!editformData.pEditFile) {
           console.log("File Not upload=============", editformData);
         } else {
@@ -98,7 +99,7 @@ const EditProductModal = (props) => {
           <div className={`${data.editProductModal.modal ? "" : "hidden"} fixed inset-0 flex items-center z-30 justify-center overflow-auto`}>
             <div className="mt-32 md:mt-0 relative bg-white w-11/12 md:w-3/6 shadow-lg flex flex-col items-center space-y-4 px-4 py-4 md:px-8">
               <div className="flex items-center justify-between w-full pt-4">
-                <span className="text-left font-semibold text-2xl tracking-wider">Edit Product</span>
+                <span className="text-left font-semibold text-2xl tracking-wider">Edit Worksheet</span>
                 {/* Close Modal */}
                 <span style={{background: '#303031'}} onClick={e=> dispatch({type:"editProductModalClose",payload:false})} className="cursor-pointer text-gray-100 py-2 px-2 rounded-full"><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></span>
               </div>
@@ -107,19 +108,19 @@ const EditProductModal = (props) => {
                <form className="w-full" onSubmit={e=> submitForm(e)}>
                 <div className="flex space-x-1 py-4">
                   <div className="w-1/2 flex flex-col space-y-1 space-x-1">
-                    <label htmlFor="name">Product Name *</label>
+                    <label htmlFor="name">Worksheet Name *</label>
                     <input 
                       value={editformData.pName} 
                       onChange={e=> setEditformdata({...editformData,error:false,success:false,pName:e.target.value})}
                       className="px-4 py-2 border focus:outline-none" type="text" />
                   </div>
                   <div className="w-1/2 flex flex-col space-y-1">
-                    <label htmlFor="status">Product Category *</label>
+                    <label htmlFor="status">Worksheet Subject *</label>
                     <select 
                       onChange={e=> setEditformdata({...editformData,error:false,success:false,pCategory:e.target.value})}
                       name="status" 
                       className="px-4 py-2 border focus:outline-none" id="status">
-                      <option disabled value="">Select a category</option>
+                      <option disabled value="">Select a subject</option>
                       {
                         categories && categories.length>0
                         ? categories.map((elem)=> {
@@ -138,7 +139,7 @@ const EditProductModal = (props) => {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <label htmlFor="description">Product Description *</label>
+                  <label htmlFor="description">Worksheet Description *</label>
                   <textarea 
                     value={editformData.pDescription} 
                     onChange={e=> setEditformdata({...editformData,error:false,success:false,pDescription:e.target.value})} 
@@ -146,31 +147,12 @@ const EditProductModal = (props) => {
                     name="description" 
                     id="description" cols={5} rows={2} />
                 </div>
-                {/* Most Important part for uploading multiple image */}
                 <div className="flex flex-col mt-4">
-                  <label htmlFor="image">Product Images *</label>
-                  {
-                    editformData.pImages ? (
-                                    <div className="flex space-x-1">
-                                      <img className="h-16 w-16 object-cover" src={`${apiURL}/uploads/products/${editformData.pImages[0]}`} alt="productImage" />
-                                    </div>
-                    ) : ""
-                  }
-                  <span className="text-gray-600 text-xs">(Accept .jpg, .jpeg, .png format)</span>
-                  <input 
-                    onChange={e=> setEditformdata({...editformData,error:false,success:false,pEditImages:[...e.target.files]})} 
-                    type="file" 
-                    accept=".jpg, .jpeg, .png"
-                    className="px-4 py-2 border focus:outline-none" 
-                    id="image" />
-                </div>
-                {/* Most Important part for uploading multiple image */}
-                <div className="flex flex-col mt-4">
-									<label htmlFor="worksheet">Product Worksheet File *</label>
+									<label htmlFor="worksheet">Worksheet File *</label>
                   {
                     editformData.pFile ? (
                                     <div className="flex space-x-1">
-                                      <h4>{editformData.pFile}</h4>
+                                      <img className="h-16 w-16 object-cover" src={`${apiURL}/uploads/worksheets-images/${editformData.pFile.replace('.pdf','')}/${editformData.pImages[0]}`} alt="" />
                                     </div>
                     ) : ""
                   }
@@ -184,7 +166,7 @@ const EditProductModal = (props) => {
 								</div>
                 <div className="flex space-x-1 py-4">
                   <div className="w-1/2 flex flex-col space-y-1">
-                    <label htmlFor="status">Product Status *</label>
+                    <label htmlFor="status">Worksheet Status *</label>
                     <select 
                       value={editformData.pStatus} 
                       onChange={e=> setEditformdata({...editformData,error:false,success:false,pStatus:e.target.value})} 
@@ -195,39 +177,9 @@ const EditProductModal = (props) => {
                       <option name="status" value="Disabled">Disabled</option>
                     </select>
                   </div>
-                  <div className="w-1/2 flex flex-col space-y-1 space-x-1">
-                    <label htmlFor="price">Product Offer *</label>
-                    <select 
-                      value={editformData.pOffer} 
-                      onChange={e=> setEditformdata({...editformData,error:false,success:false,pOffer:e.target.value})}
-                      type="string"  className="px-4 py-2 border focus:outline-none" id="offer" >
-                      <option name="status" value="Free">Free</option>
-											<option name="status" value="Paid">Paid</option>
-                    </select>
-                  </div>
                 </div>
-                {/* <div className="flex space-x-1 py-4">
-                  <div className="w-1/2 flex flex-col space-y-1">
-                    <label htmlFor="quantity">Product in Stock *</label>
-                    <input 
-                      value={editformData.pQuantity} 
-                      onChange={e=> setEditformdata({...editformData,error:false,success:false,pQuantity:e.target.value})}
-                      type="number" 
-                      className="px-4 py-2 border focus:outline-none" 
-                      id="quantity" />
-                  </div>
-                  <div className="w-1/2 flex flex-col space-y-1">
-                    <label htmlFor="offer">Product Offfer (%) *</label>
-                    <input 
-                      value={editformData.pOffer}
-                      onChange={e=> setEditformdata({...editformData,error:false,success:false,pOffer:e.target.value})}
-                      type="number"
-                      className="px-4 py-2 border focus:outline-none"
-                      id="offer" />
-                  </div>
-                </div> */}
                 <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
-                  <button style={{background: '#303031'}} type="submit" className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2">Update product</button>
+                  <button style={{background: '#303031'}} type="submit" className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2">Update worksheet</button>
                 </div>
               </form>
             </div>

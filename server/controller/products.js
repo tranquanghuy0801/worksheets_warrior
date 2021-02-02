@@ -1,18 +1,30 @@
 const productModel = require("../models/products");
 const fs = require('fs');
+const path = require("path");
+const { fromPath } = require('pdf2pic');
+const rimraf = require("rimraf");
 
 class Product {
 
-    // Delete image from static folder
+    // Delete worksheet file from uploads folder
+    static deleteFile(fileName) {
+        let basePath = path.resolve(__dirname + '../../../') + '/public/uploads/worksheets/';
+        fs.unlink(basePath + fileName, (err) => {
+            if (err) {  return err; }
+        });
+    }
+
+    // Delete images of worksheet from uploads folder
     static deleteImages(images) {
-        for (var i = 0; i < images.length; i++) {
-            let filePath = `../server/public/uploads/products/${images[i].filename}`;
+        let basePath = path.resolve(__dirname + '../../../') + '/public/uploads/worksheets-images/';
+        for (let i = 0; i < images.length; i++) {
+            let filePath = basePath  + `${images[i]}`;
             fs.unlink(filePath, (err) => {
                 if (err) {
-                    return err
-                }
-            })
-        }
+                return err;
+            }
+        });
+    }
     }
 
     async getAllProduct(req, res) {
@@ -27,45 +39,59 @@ class Product {
     }
 
     async postAddProduct(req, res) {
-        let { pName, pDescription, pCategory, pOffer, pStatus } = req.body
-        let images = req.files
+        let { pName, pDescription, pCategory, pStatus } = req.body
+        let files = req.files
         console.log("Upload images");
-        console.log(images);
-        console.log(images.length);
+        console.log(files);
+        // Validate File upload
+        if (files.length != 1) {
+            return res.json({ error: "Must need to upload the worksheet file" })
+        }
         // Validate other fileds
-        if (!pName | !pDescription | !pCategory | !pOffer | !pStatus) {
-            Product.deleteImages(images)
+        else if (!pName | !pDescription | !pCategory | !pStatus) {
+            Product.deleteFile(files[0].filename)
             return res.json({ error: "All filled must be required" })
         }
         // Validate Name and description
         else if (pName.length > 255 || pDescription.length > 3000) {
-            Product.deleteImages(images)
+            Product.deleteFile(files[0].filename)
             return res.json({ error: "Name 255 & Description must not be 3000 charecter long" })
         }
-        // Validate Images
-        else if (images.length != 2) {
-            Product.deleteImages(images)
-            return res.json({ error: "Must need to upload all required files" })
-        } else {
+        else {
             try {
                 let allImages = [];
-                for (const img of images) {
-                    console.log(img.filename);
-                }
-                allImages.push(images[0].filename);
-                let newProduct = new productModel({
-                    pImages: allImages,
-                    pName,
-                    pDescription,
-                    pCategory,
-                    pOffer,
-                    pStatus,
-                    pFile: images[1].filename,
+                let fileName = files[0].filename;
+                let basePath = path.resolve(__dirname + '../../../');
+                let outputDir = basePath + '/public/uploads/worksheets-images/' + fileName.replace('.pdf','');
+                fs.mkdirSync(outputDir, { recursive: true })
+                const options = {
+                    density: 300,
+                    savePath: outputDir,
+                    format: "png",
+                    width: 400,
+                    height: 500,
+                    quality: 100,
+                };
+                const convert = fromPath(basePath + '/public/uploads/worksheets/' + fileName, options);
+                convert.bulk(-1).then((images) => {
+                    images.forEach(image => {
+                        allImages.push(image.name);
+                    })
+                }).then( async () => {
+                    console.log(allImages);
+                    let newProduct = new productModel({
+                        pImages: allImages,
+                        pName,
+                        pDescription,
+                        pCategory,
+                        pStatus,
+                        pFile: fileName,
+                    })
+                    let save = await newProduct.save()
+                    if (save) {
+                        return res.json({ success: "Product created successfully" })
+                    }
                 })
-                let save = await newProduct.save()
-                if (save) {
-                    return res.json({ success: "Product created successfully" })
-                }
             } catch (err) {
                 console.log(err)
             }
@@ -74,40 +100,70 @@ class Product {
     }
 
     async postEditProduct(req, res) {
-        let { pId, pName, pDescription, pCategory, pOffer, pStatus } = req.body
-        console.log(req.files.length);
-        console.log(req.files);
+        let { pId, pName, pDescription, pCategory, pStatus, pFile } = req.body
+        let files = req.files;
+        console.log(files);
         let editData = {
             pName,
             pDescription,
             pCategory,
-            pOffer,
             pStatus
         }
-        req.files.forEach(file => {
-            if (file.fieldname == 'pFile') {
-                editData['pFile'] = file.filename;
-            }
-            if (file.fieldname == 'pImage') {
-                editData['pImages'] = [];
-                editData['pImages'].push(file.filename);
-            }
-        })
-        console.log(editData);
         // Validate other fileds
-        if (!pId | !pName | !pDescription | !pCategory | !pOffer | !pStatus) {
+        if (!pId | !pName | !pDescription | !pCategory | !pStatus) {
+            if (files.length > 0) {
+                Product.deleteFile(files[0].filename);
+            }
             return res.json({ error: "All filled must be required" })
         }
         // Validate Name and description
         else if (pName.length > 255 || pDescription.length > 3000) {
+            if (files.length > 0) {
+                Product.deleteFile(files[0].fileName);
+            }
             return res.json({ error: "Name 255 & Description must not be 3000 charecter long" })
         } else {
             try {
-                let editProduct = productModel.findByIdAndUpdate(pId, editData)
-                editProduct.exec(err => {
-                    if (err) console.log(err);
-                    return res.json({ success: "Product edit successfully" })
-                })
+                let basePath = path.resolve(__dirname + '../../../')
+                if (files.length > 0) {
+                    let fileName = files[0].filename;
+                    Product.deleteFile(pFile);
+                    rimraf.sync(basePath + '/public/uploads/worksheets-images/' + pFile.replace('.pdf',''));
+                    let outputDir = basePath + '/public/uploads/worksheets-images/' + fileName.replace('.pdf','');
+                    fs.mkdirSync(outputDir, { recursive: true })
+                    const options = {
+                        density: 300,
+                        savePath: outputDir,
+                        format: "png",
+                        width: 400,
+                        height: 500,
+                        quality: 100,
+                    };
+                    let allImages = [];
+                    const convert = fromPath(basePath + '/public/uploads/worksheets/' + fileName, options);
+                    convert.bulk(-1).then((images) => {
+                        images.forEach(image => {
+                            allImages.push(image.name);
+                        })
+                    }).then( async () => {
+                        console.log(allImages);
+                        editData['pFile'] = fileName;
+                        editData['pImages'] = allImages;
+                        console.log(editData);
+                        let editProduct = productModel.findByIdAndUpdate(pId, editData)
+                        editProduct.exec(err => {
+                            if (err) console.log(err);
+                            return res.json({ success: "Product edit successfully" })
+                        })
+                    })
+
+                } else {
+                    let editProduct = productModel.findByIdAndUpdate(pId, editData)
+                    editProduct.exec(err => {
+                        if (err) console.log(err);
+                        return res.json({ success: "Product edit successfully" })
+                    })
+                }
 
             } catch (err) {
                 console.log(err)
@@ -124,15 +180,10 @@ class Product {
                 let deleteProductObj = await productModel.findById(pId)
                 let deleteProduct = await productModel.findByIdAndDelete(pId)
                 if (deleteProduct) {
+                    let basePath = path.resolve(__dirname + '../../../') + '/public/uploads/worksheets-images/';
                     // Deleting from static file
-                    for (const img of deleteProductObj.pImages) {
-                        let filePath = `../server/public/uploads/products/${img}`;
-                        fs.unlink(filePath, (err) => {
-                            if (err) {
-                                return err
-                            }
-                        })
-                    }
+                    Product.deleteFile(deleteProductObj.pFile);
+                    rimraf.sync(basePath + deleteProductObj.pFile.replace('.pdf',''));
                     return res.json({ success: "Product deleted successfully" })
                 }
             } catch (err) {

@@ -19,6 +19,7 @@ const Layout = ({ children }) => {
 			    <div className="flex-grow">    	
 					<Navber />
 					<CartModal />
+					<br></br>
 					<div className="mx-4 mt-24 md:mx-12 md:mt-32 lg:mt-24 flex flex-col md:flex-row">				
 						<Sidebar/>
 						{/* All Children pass from here */}

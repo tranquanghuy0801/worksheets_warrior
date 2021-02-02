@@ -18,23 +18,10 @@ const productSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
-    pOffer: {
-        type: String,
-        required: true
-    },
     pFile: {
         type: String,
         required: true
     },
-    pRatingsReviews: [{
-        review: String,
-        user: { type: ObjectId, ref: "users" },
-        rating: String,
-        createdAt: {
-            type: Date,
-            default: Date.now()
-        }
-    }],
     pStatus: {
         type: String,
         required: true

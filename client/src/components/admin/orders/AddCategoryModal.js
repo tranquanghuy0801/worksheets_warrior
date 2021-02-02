@@ -69,7 +69,7 @@ const AddCategoryModal = (props) => {
         <div className={`${data.addCategoryModal ? "" : "hidden"} fixed inset-0 m-4  flex items-center z-30 justify-center`}>
           <div className="relative bg-white w-12/12 md:w-3/6 shadow-lg flex flex-col items-center space-y-4  overflow-y-auto px-4 py-4 md:px-8">
             <div className="flex items-center justify-between w-full pt-4">
-              <span className="text-left font-semibold text-2xl tracking-wider">Add Category</span>
+              <span className="text-left font-semibold text-2xl tracking-wider">Add Subject</span>
               {/* Close Modal */}
               <span style={{background: '#303031'}} onClick={e=> dispatch({type:"addCategoryModal",payload:false})} className="cursor-pointer text-gray-100 py-2 px-2 rounded-full"><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></span>
             </div>
@@ -77,27 +77,27 @@ const AddCategoryModal = (props) => {
             { fData.success ? alert(fData.success,"green") : ""}
             <form className="w-full" onSubmit={e=> submitForm(e)}>
               <div className="flex flex-col space-y-1 w-full py-4">
-                <label htmlFor="name">Category Name</label>
+                <label htmlFor="name">Subject Name</label>
                 <input onChange={e=> setFdata({...fData,success:false,error:false,cName:e.target.value})} value={fData.cName} className="px-4 py-2 border focus:outline-none" type="text" />
               </div>
               <div className="flex flex-col space-y-1 w-full">
-                <label htmlFor="description">Category Description</label>
+                <label htmlFor="description">Subject Description</label>
                 <textarea onChange={e=> setFdata({...fData,success:false,error:false,cDescription:e.target.value})} value={fData.cDescription} className="px-4 py-2 border focus:outline-none" name="description" id="description" cols={5} rows={5} />
               </div>
               {/* Image Field & function */}
               <div className="flex flex-col space-y-1 w-full">
-                <label htmlFor="name">Category Image</label>
+                <label htmlFor="name">Subject Image</label>
                 <input accept=".jpg, .jpeg, .png" onChange={e=> {setFdata({...fData,success:false,error:false,cImage:e.target.files[0]});}} className="px-4 py-2 border focus:outline-none" type="file" />
               </div>
               <div className="flex flex-col space-y-1 w-full">
-                <label htmlFor="status">Category Status</label>
+                <label htmlFor="status">Subject Status</label>
                 <select name="status" onChange={e=> setFdata({...fData,success:false,error:false,cStatus:e.target.value})} className="px-4 py-2 border focus:outline-none" id="status">
                   <option name="status" value="Active">Active</option>
                   <option name="status" value="Disabled">Disabled</option>
                 </select>
               </div>
               <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
-                <button style={{background: '#303031'}}  type="submit" className="bg-gray-800 text-gray-100 rounded-full text-lg font-medium py-2">Create category</button>
+                <button style={{background: '#303031'}}  type="submit" className="bg-gray-800 text-gray-100 rounded-full text-lg font-medium py-2">Create subject</button>
               </div>
             </form>
           </div>

@@ -5,6 +5,8 @@ export const isAuthenticate = () => localStorage.getItem("jwt") ? JSON.parse(loc
 
 export const isAdmin = () => localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).user.role === 1 : false
 
+export const isPaid = () => localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).user.paid === "true" : false
+
 export const loginReq = async ({ email, password }) => {
     const data = { email, password }
     try {

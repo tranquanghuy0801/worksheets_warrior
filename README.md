@@ -12,23 +12,19 @@ npm and Node.js installed
 
 A step by step series of examples that tell you how to get a development env running
 
-Installing npm modules of both client and server folder
+Installing npm modules
 
 ```
-cd client && npm install
-```
-
-```
-cd server && npm install
+npm install
 ```
 
 Creating uploads folder in server directory
 
 ```
-mkdir public && mkdir public/uploads && mkdir public/uploads/categories && mkdir public/uploads/customize && mkdir public/uploads/orders && mkdir public/uploads/products
+mkdir public && mkdir public/uploads && mkdir public/uploads/categories && mkdir public/uploads/customize && mkdir public/uploads/worksheets && mkdir public/uploads/worksheets-images
 ```
 
-Create .env in server folder with template below (Create an account on [Braintree](https://www.braintreepayments.com/sandbox?referrer=https%3A%2F%2Fwww.google.com%2F) to get Sandbox credentials)
+Create .env in the main directory with template below (Create an account on [Braintree](https://www.braintreepayments.com/sandbox?referrer=https%3A%2F%2Fwww.google.com%2F) to get Sandbox credentials)
 ```
 DATABASE=mongodb://localhost/ecommerce
 PORT=8000
@@ -42,17 +38,24 @@ BRAINTREE_PRIVATE_KEY=***
 Open a terminal on server directory
 
 ```
-npm run dev
+npm run start:server
 ```
 
 and open another terminal on client directory
 ```
-npm start
+npm run start:client
 ```
 
 ### Running the tests
 
 ### Deployment
+
+Run these commands to build the client directory and run on the server
+
+```
+npm run build:client
+npm run start:server
+```
 
 ### Built With
 
