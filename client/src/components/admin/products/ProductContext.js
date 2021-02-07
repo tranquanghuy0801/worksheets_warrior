@@ -5,13 +5,17 @@ export const productState = {
         modal: false,
         pId: "",
         pName: "",
-        pDescription: "",
-        pImages: null,
         pStatus: "",
         pCategory: "",
-        pOffer: "",
-        pFile: ""
-    }
+        pGrade: 1,
+        pLevel: "",
+        pFile: "",
+        pImages: [],
+        pDescriptor1: "",
+        pDescriptor2: "",
+        pDescriptor3: "",
+    },
+    descriptor: false,
 }
 
 export const productReducer = (state, action) => {
@@ -36,12 +40,15 @@ export const productReducer = (state, action) => {
                     modal: true,
                     pId: action.product.pId,
                     pName: action.product.pName,
-                    pDescription: action.product.pDescription,
-                    pImages: action.product.pImages,
                     pStatus: action.product.pStatus,
                     pCategory: action.product.pCategory,
-                    pOffer: action.product.pOffer,
-                    pFile: action.product.pFile
+                    pGrade: action.product.pGrade,
+                    pLevel: action.product.pLevel,
+                    pFile: action.product.pFile,
+                    pImages: action.product.pImages,
+                    pDescriptor1: action.product.pDescriptor1,
+                    pDescriptor2: action.product.pDescriptor2,
+                    pDescriptor3: action.product.pDescriptor3,
                 }
             }
         case 'editProductModalClose':
@@ -51,13 +58,22 @@ export const productReducer = (state, action) => {
                     modal: false,
                     pId: "",
                     pName: "",
-                    pDescription: "",
+                    pGrade: 1,
+                    pLevel: "",
                     pImages: null,
                     pStatus: "",
                     pCategory: "",
-                    pOffer: "",
                     pFile: "",
+                    pDescriptor1: "",
+                    pDescriptor2: "",
+                    pDescriptor3: "",
+
                 }
+            }
+        case 'descriptorHandler':
+            return {
+                ...state,
+                descriptor: action.payload,
             }
         default:
             return state

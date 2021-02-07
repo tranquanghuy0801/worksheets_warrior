@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { getAllProduct, deleteProduct } from "./FetchApi"
 import moment from "moment"
 import { ProductContext } from "./index"
-
+ 
 const apiURL = process.env.REACT_APP_API_URL
 
 const AllProduct = (props) => {
@@ -55,13 +55,11 @@ const AllProduct = (props) => {
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">Worksheet</th>
-                  <th className="px-4 py-2 border">Description</th>
                   <th className="px-4 py-2 border">Image</th>
                   <th className="px-4 py-2 border">Status</th>
                   <th className="px-4 py-2 border">File Name</th>
-                  {/* <th className="px-4 py-2 border">Stock</th> */}
                   <th className="px-4 py-2 border">Subject</th>
-                  {/* <th className="px-4 py-2 border">Offer</th> */}
+                  <th className="px-4 py-2 border">Difficulty</th>
                   <th className="px-4 py-2 border">Created at</th>
                   <th className="px-4 py-2 border">Updated at</th>
                   <th className="px-4 py-2 border">Actions</th>
@@ -75,11 +73,11 @@ const AllProduct = (props) => {
                       <ProductTable product={item} editProduct={(pId,product,type)=> editProduct(pId,product,type)} deleteProduct={pId=> deleteProductReq(pId)} key={key} />
                     )
                   })
-                  : <tr><td colSpan="10" className="text-xl text-center font-semibold py-8">No product found</td></tr>
+                  : <tr><td colSpan="10" className="text-xl text-center font-semibold py-8">No worksheet found</td></tr>
                 }
               </tbody>
             </table>
-            <div className="text-sm text-gray-600 mt-2">Total {products && products.length} product found</div>
+            <div className="text-sm text-gray-600 mt-2">Total {products && products.length} worksheet found</div>
           </div>
         </Fragment>
     )
@@ -88,14 +86,19 @@ const AllProduct = (props) => {
 /* Single Product Component */
 const ProductTable = ({ product, deleteProduct, editProduct }) => {
 
+    const levels = {
+      'E': 'Easy',
+      'M': 'Moderate',
+      'H': 'Hard'
+    }
+
     return (
         <Fragment>
           <tr>
-            <td className="p-2 text-left">{product.pName.length>15 ? product.pDescription.substring(1,15)+"..." : product.pName}
+            <td className="p-2 text-left">{product.pName}
             </td>
-            <td className="p-2 text-left">{product.pDescription.slice(0,15)}...</td>
             <td className="p-2 text-center">
-              <img className="w-12 h-12 object-cover object-center" src={`${apiURL}/uploads/worksheets-images/${product.pFile.replace('.pdf','')}/${product.pImages[0]}`} alt="pic" />
+              <img className="w-12 h-12 object-cover object-center" src={`${apiURL}/uploads/worksheets-images/${product.pFile.split('-')[0]}/${product.pImages[0]}`} alt="pic" />
             </td>
             <td className="p-2 text-center">
               { product.pStatus === "Active"
@@ -104,9 +107,9 @@ const ProductTable = ({ product, deleteProduct, editProduct }) => {
               }
             </td>
             {/* <td className="p-2 text-center">{product.pQuantity}</td>      */}
-            <td className="p-2 text-left">{product.pFile.slice(0,15)}...</td>  
+            <td className="p-2 text-left">{product.pFile}</td>  
             <td className="p-2 text-center">{product.pCategory.cName}</td>     
-            {/* <td className="p-2 text-center">{product.pOffer}</td>      */}
+            <td className="p-2 text-center">{levels[product.pLevel]}</td>     
             <td className="p-2 text-center">{moment(product.createdAt).format('lll')}</td>     
             <td className="p-2 text-center">{moment(product.updatedAt).format('lll')}</td>     
             <td className="p-2 flex items-center justify-center">

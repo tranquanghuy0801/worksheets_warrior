@@ -15,6 +15,9 @@ const brainTreeRouter = require('./routes/braintree');
 const orderRouter = require('./routes/orders');
 const usersRouter = require('./routes/users');
 const customizeRouter = require('./routes/customize');
+const descriptorFirstRouter = require('./routes/descriptorFirst');
+const descriptorSecondRouter = require('./routes/descriptorSecond');
+const descriptorThirdRouter = require('./routes/descriptorThird');
 
 // Import Auth middleware
 const { loginCheck } = require('./middleware/auth')
@@ -45,6 +48,9 @@ app.use('/api/product', productRouter)
 app.use('/api', brainTreeRouter)
 app.use('/api/order', orderRouter)
 app.use('/api/customize', customizeRouter)
+app.use('/api/descriptor-first', descriptorFirstRouter);
+app.use('/api/descriptor-second', descriptorSecondRouter);
+app.use('/api/descriptor-third', descriptorThirdRouter);
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + "../../",'build', 'index.html'));

@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require("path");
 const { fromPath } = require('pdf2pic');
 const rimraf = require("rimraf");
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types.ObjectId;
 
 class Product {
 
@@ -29,7 +31,10 @@ class Product {
 
     async getAllProduct(req, res) {
         try {
-            let Products = await productModel.find({}).populate("pCategory", "_id cName cImage").sort({ _id: -1 })
+            let Products = await productModel.find({}).populate("pCategory", "_id cName cImage")
+            .populate("pDescriptor1", "_id dContent dCode")
+            .populate("pDescriptor2", "_id dContent dCode")
+            .populate("pDescriptor3", "_id dContent dCode")
             if (Products) {
                 return res.json({ Products })
             }
@@ -39,30 +44,30 @@ class Product {
     }
 
     async postAddProduct(req, res) {
-        let { pName, pDescription, pCategory, pStatus } = req.body
+        let { pName, pCategory, pGrade, pLevel, pStatus, pDescriptor1, pDescriptor2, pDescriptor3, pFileName } = req.body
         let files = req.files
         console.log("Upload images");
         console.log(files);
+        console.log(req.body);
         // Validate File upload
         if (files.length != 1) {
             return res.json({ error: "Must need to upload the worksheet file" })
         }
         // Validate other fileds
-        else if (!pName | !pDescription | !pCategory | !pStatus) {
+        else if (!pName | !pCategory | !pStatus | !pGrade | !pLevel | !pDescriptor1 | !pDescriptor2 | !pDescriptor3) {
             Product.deleteFile(files[0].filename)
             return res.json({ error: "All filled must be required" })
         }
         // Validate Name and description
-        else if (pName.length > 255 || pDescription.length > 3000) {
+        else if (pName.length > 300) {
             Product.deleteFile(files[0].filename)
-            return res.json({ error: "Name 255 & Description must not be 3000 charecter long" })
+            return res.json({ error: "Name must not be 300 charecter long" })
         }
         else {
             try {
                 let allImages = [];
-                let fileName = files[0].filename;
                 let basePath = path.resolve(__dirname + '../../../');
-                let outputDir = basePath + '/public/uploads/worksheets-images/' + fileName.replace('.pdf','');
+                let outputDir = basePath + '/public/uploads/worksheets-images/' + pFileName.split('-')[0];
                 fs.mkdirSync(outputDir, { recursive: true })
                 const options = {
                     density: 300,
@@ -72,7 +77,7 @@ class Product {
                     height: 500,
                     quality: 100,
                 };
-                const convert = fromPath(basePath + '/public/uploads/worksheets/' + fileName, options);
+                const convert = fromPath(basePath + '/public/uploads/worksheets/' + pFileName, options);
                 convert.bulk(-1).then((images) => {
                     images.forEach(image => {
                         allImages.push(image.name);
@@ -82,10 +87,14 @@ class Product {
                     let newProduct = new productModel({
                         pImages: allImages,
                         pName,
-                        pDescription,
+                        pGrade,
                         pCategory,
+                        pLevel,
                         pStatus,
-                        pFile: fileName,
+                        pFile: pFileName,
+                        pDescriptor1,
+                        pDescriptor2,
+                        pDescriptor3
                     })
                     let save = await newProduct.save()
                     if (save) {
@@ -100,36 +109,39 @@ class Product {
     }
 
     async postEditProduct(req, res) {
-        let { pId, pName, pDescription, pCategory, pStatus, pFile } = req.body
+        let { pId, pName, pStatus, pGrade, pLevel, pFile, pDescriptor1, pDescriptor2, pDescriptor3, pFileName } = req.body
         let files = req.files;
         console.log(files);
         let editData = {
             pName,
-            pDescription,
-            pCategory,
-            pStatus
+            pGrade,
+            pStatus,
+            pLevel,
+            pDescriptor1: pDescriptor1,
+            pDescriptor2: pDescriptor2,
+            pDescriptor3: pDescriptor3,
         }
         // Validate other fileds
-        if (!pId | !pName | !pDescription | !pCategory | !pStatus) {
+        if (!pId | !pName | !pLevel | !pDescriptor1 | !pDescriptor2 | !pDescriptor3 | !pStatus) {
             if (files.length > 0) {
                 Product.deleteFile(files[0].filename);
             }
             return res.json({ error: "All filled must be required" })
         }
         // Validate Name and description
-        else if (pName.length > 255 || pDescription.length > 3000) {
+        else if (pName.length > 300) {
             if (files.length > 0) {
                 Product.deleteFile(files[0].fileName);
             }
-            return res.json({ error: "Name 255 & Description must not be 3000 charecter long" })
+            return res.json({ error: "Name must not be 300 characters long" })
         } else {
             try {
                 let basePath = path.resolve(__dirname + '../../../')
                 if (files.length > 0) {
                     let fileName = files[0].filename;
                     Product.deleteFile(pFile);
-                    rimraf.sync(basePath + '/public/uploads/worksheets-images/' + pFile.replace('.pdf',''));
-                    let outputDir = basePath + '/public/uploads/worksheets-images/' + fileName.replace('.pdf','');
+                    rimraf.sync(basePath + '/public/uploads/worksheets-images/' + pFile.split('-')[0]);
+                    let outputDir = basePath + '/public/uploads/worksheets-images/' + fileName.split('-')[0];
                     fs.mkdirSync(outputDir, { recursive: true })
                     const options = {
                         density: 300,
@@ -147,8 +159,7 @@ class Product {
                         })
                     }).then( async () => {
                         console.log(allImages);
-                        editData['pFile'] = fileName;
-                        editData['pImages'] = allImages;
+                        editData = {...editData, pFile: fileName, pImages: allImages};
                         console.log(editData);
                         let editProduct = productModel.findByIdAndUpdate(pId, editData)
                         editProduct.exec(err => {
@@ -158,6 +169,13 @@ class Product {
                     })
 
                 } else {
+                    if (pFileName) {
+                        editData = {...editData,pFile: pFileName};
+                        fs.renameSync(basePath + '/public/uploads/worksheets/' + pFile, basePath + '/public/uploads/worksheets/' + pFileName);
+                        fs.renameSync(basePath + '/public/uploads/worksheets-images/' + pFile.split('-')[0], basePath + '/public/uploads/worksheets-images/' + pFileName.split('-')[0]);
+                        
+                    }
+                    console.log(editData);
                     let editProduct = productModel.findByIdAndUpdate(pId, editData)
                     editProduct.exec(err => {
                         if (err) console.log(err);
@@ -183,7 +201,7 @@ class Product {
                     let basePath = path.resolve(__dirname + '../../../') + '/public/uploads/worksheets-images/';
                     // Deleting from static file
                     Product.deleteFile(deleteProductObj.pFile);
-                    rimraf.sync(basePath + deleteProductObj.pFile.replace('.pdf',''));
+                    rimraf.sync(basePath + deleteProductObj.pFile.split('-')[0]);
                     return res.json({ success: "Product deleted successfully" })
                 }
             } catch (err) {
@@ -246,7 +264,7 @@ class Product {
             return res.json({ error: "All filled must be required" })
         } else {
             try {
-                let wishProducts = await productModel.find({ _id: { $in: productArray } }).populate('pCategory', 'cName');
+                let wishProducts = await productModel.find({ _id: { $in: productArray } }).populate('pCategory', 'cName').populate("pDescriptor1", "_id dContent dCode");
                 if (wishProducts) {
                     return res.json({ Products: wishProducts })
                 }

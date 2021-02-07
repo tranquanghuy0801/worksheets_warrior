@@ -105,7 +105,7 @@ const CheckoutProducts = ({products})=> {
 	                  </div>
 	                )
 	            })
-	            : <div>No product found for checkout</div>
+	            : <div>No worksheet found for checkout</div>
 	          }
 	        </div>
         </Fragment>

@@ -5,6 +5,12 @@ export const isWish = (id,wList)=> {
 	return false
 }
 
+export const levels = {
+	'E': 'Easy',
+	'M': 'Moderate',
+	'H': 'Hard'
+}
+
 export const isWishReq = (e,id,setWlist)=> {
 	let list = localStorage.getItem("wishList") ? JSON.parse(localStorage.getItem("wishList")) : []
 	if(list.length > 0){

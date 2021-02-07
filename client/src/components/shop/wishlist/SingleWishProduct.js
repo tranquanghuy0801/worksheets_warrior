@@ -19,6 +19,7 @@ const Product = () => {
         let responseData = await wishListProducts()
         setTimeout(() => {
             if (responseData && responseData.Products) {
+                console.log(responseData.Products);
                 setProducts(responseData.Products)
                 setLoading(false)
             }
@@ -36,7 +37,7 @@ const Product = () => {
         }
     }
     if (loading) {
-        return <div className="my-32 text-2xl text-center">No product found in wishList</div>
+        return <div className="my-32 text-2xl text-center">No worksheet found in Favourites</div>
     }
     return (
         <Fragment>
@@ -47,18 +48,18 @@ const Product = () => {
                   return (
                     <div key={index} className="relative m-2 md:py-6 md:border-t md:border-b md:my-2 md:mx-0 col-span-1 md:flex md:items-center md:justify-between">
                       <div className="md:w-1/2 md:flex md:items-center">
-                      <img className="cursor-pointer md:h-20 md:w-20 object-cover object-center" src={`${apiURL}/uploads/worksheets-images/${product.pFile.replace('.pdf','')}/${product.pImages[0]}`} alt="wishListproduct" /> 
+                      <img className="cursor-pointer md:h-20 md:w-20 object-cover object-center" src={`${apiURL}/uploads/worksheets-images/${product.pFile.split('-')[0]}/${product.pImages[0]}`} alt="wishListproduct" /> 
                         <div className="text-lg md:ml-6 truncate">{product.pName}</div>
                       </div>
                       <div className="md:w-1/2 md:flex md:items-center md:justify-around">
-                        <div className="font-semibold text-gray-600">{product.pCategory.cName}</div>
+                        <div className="font-semibold text-gray-600">{product.pCategory.cName} - {product.pDescriptor1.dContent}</div>
                         <div className="font-semibold text-gray-600">{product.pImages.length} pages</div>
                         {/* {
                           product.pQuantity > 0
                           ? <div className="text-green-500 my-1 md:my-0">In Stock</div>
                           : <div className="text-red-500 my-1 md:my-0">Out Stock</div>
                         } */}
-                       
+
                         <div style={{background: '#303031'}} onClick={e=> history.push(`/products/${product._id}`) } className="inline-block px-4 py-2 text-white text-xs md:text-base text-center cursor-pointer hover:opacity-75">View</div>
                       </div>
                       <div className="absolute top-0 right-0 mx-2 my-2 md:relative">
@@ -67,7 +68,7 @@ const Product = () => {
                     </div>
                   )
               })
-              : <div>No product found in wishList</div>
+              : <div>No worksheet found in Favourites</div>
             }
           </div>
         </Fragment>

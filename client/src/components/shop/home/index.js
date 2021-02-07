@@ -18,8 +18,9 @@ const HomeComponent = () => {
 			<section className="m-4 md:mx-8 md:my-6">
 				<ProductCategory/>
 			</section>
-			{/* Product Section */}
-			<SingleProduct/>
+			<section className="m-4 md:mx-8 md:my-6">
+				<SingleProduct/>
+			</section>
 		</Fragment>
     )
 }
