@@ -3,7 +3,6 @@ import AdminLayout from "../layout";
 import DashboardCard from "./DashboardCard";
 import Customize from "./Customize";
 import { dashboardState, dashboardReducer } from './DashboardContext';
-import TodaySell from './TodaySell';
 
 export const DashboardContext = createContext();
 
@@ -12,7 +11,6 @@ const DashboardComponent = ()=> {
 		<Fragment>
 			{/* <DashboardCard/> */}
 			<Customize/>
-			{/* <TodaySell/> */}
 		</Fragment>
 	)
 }

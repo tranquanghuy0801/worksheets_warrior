@@ -60,7 +60,7 @@ const AllProduct = (props) => {
                   <th className="px-4 py-2 border">File Name</th>
                   <th className="px-4 py-2 border">Subject</th>
                   <th className="px-4 py-2 border">Difficulty</th>
-                  <th className="px-4 py-2 border">Created at</th>
+                  <th className="px-4 py-2 border">Keywords</th>
                   <th className="px-4 py-2 border">Updated at</th>
                   <th className="px-4 py-2 border">Actions</th>
                 </tr>
@@ -106,11 +106,10 @@ const ProductTable = ({ product, deleteProduct, editProduct }) => {
                 : <span className="bg-red-200 rounded-full text-center text-xs px-2 font-semibold">{product.pStatus}</span>
               }
             </td>
-            {/* <td className="p-2 text-center">{product.pQuantity}</td>      */}
             <td className="p-2 text-left">{product.pFile}</td>  
             <td className="p-2 text-center">{product.pCategory.cName}</td>     
             <td className="p-2 text-center">{levels[product.pLevel]}</td>     
-            <td className="p-2 text-center">{moment(product.createdAt).format('lll')}</td>     
+            <td className="p-2 text-center">{product.pKeywords.length > 0 ? product.pKeywords.join(',') : ""}</td>     
             <td className="p-2 text-center">{moment(product.updatedAt).format('lll')}</td>     
             <td className="p-2 flex items-center justify-center">
               <span onClick={e=> editProduct(product._id,product,true)} className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1">

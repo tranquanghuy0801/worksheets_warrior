@@ -14,6 +14,7 @@ export const productState = {
         pDescriptor1: "",
         pDescriptor2: "",
         pDescriptor3: "",
+        pKeywords: [],
     },
     descriptor: false,
 }
@@ -49,6 +50,7 @@ export const productReducer = (state, action) => {
                     pDescriptor1: action.product.pDescriptor1,
                     pDescriptor2: action.product.pDescriptor2,
                     pDescriptor3: action.product.pDescriptor3,
+                    pKeywords: action.product.pKeywords,
                 }
             }
         case 'editProductModalClose':

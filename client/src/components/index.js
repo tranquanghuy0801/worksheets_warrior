@@ -1,7 +1,7 @@
 import React from 'react';
 import { Home, Membership, WishList, ProtectedRoute, AdminProtectedRoute, CartProtectedRoute, PageNotFound, ProductDetails, ProductByCategory, CheckoutPage } from "./shop";
-import { DashboardAdmin, Categories, Products, Orders } from "./admin";
-import { UserProfile, UserOrders, SettingUser } from './shop/dashboardUser';
+import { DashboardAdmin, Categories, Products } from "./admin";
+import { UserProfile, SettingUser } from './shop/dashboardUser';
 
 import {
     BrowserRouter as Router,
@@ -29,13 +29,11 @@ const Routes = (props) => {
                 <AdminProtectedRoute exact={true} path="/admin/dashboard" component={DashboardAdmin} />
                 <AdminProtectedRoute exact={true} path="/admin/dashboard/categories" component={Categories} />
                 <AdminProtectedRoute exact={true} path="/admin/dashboard/products" component={Products} />
-                <AdminProtectedRoute exact={true} path="/admin/dashboard/orders" component={Orders} />
                 {/* Admin Routes */}
                 
 
                 {/* User Dashboard */}
                 <ProtectedRoute exact={true} path="/user/profile" component={UserProfile} />
-                <ProtectedRoute exact={true} path="/user/orders" component={UserOrders} />
                 <ProtectedRoute exact={true} path="/user/setting" component={SettingUser} />
                 {/* User Dashboard */}
 

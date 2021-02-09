@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useState, useEffect } from 'react';
 import { ProductContext } from "./index";
 import { createProduct, getAllProduct, getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "./FetchApi";
 import { getAllCategory } from "../categories/FetchApi";
+import TagsInput from './TagsInput';
 
 
 const AddProductDetail = ({ categories }) => {
@@ -28,6 +29,7 @@ const AddProductDetail = ({ categories }) => {
 				pCode1: null,
 				pCode2: null,
 				pCode3: null,
+				pKeywords: [],
 				success: false,
 				error: false
 		})
@@ -97,15 +99,14 @@ const AddProductDetail = ({ categories }) => {
 				e.preventDefault();
 				e.target.reset();
 
-				console.log(fData);
-
 				try {
+					console.log(fData);
 					let responseData = await createProduct(fData);
 					if (responseData.success) {
 							fetchData();
-							setFdata({ ...fData, pName: "", pStatus: "Active", pCategory: "", pLevel: "", pFile: "", pGrade: 1, pDescriptor1: "", pDescriptor2: "", pDescriptor3: "", pCode1: "", pCode2: "", pCode3: "", success: responseData.success, error: false })
+							setFdata({ ...fData, pName: "", pStatus: "Active", pCategory: "", pLevel: "", pFile: "", pGrade: 1, pDescriptor1: "", pDescriptor2: "", pDescriptor3: "", pCode1: "", pCode2: "", pCode3: "", pKeywords: [], success: responseData.success, error: false })
 							setTimeout(() => {
-									setFdata({ ...fData, pName: "", pStatus: "Active", pCategory: "", pLevel: "", pFile: "", pGrade: 1, pDescriptor1: "", pDescriptor2: "", pDescriptor3: "", pCode1: "", pCode2: "", pCode3: "", success: false, error: false })
+									setFdata({ ...fData, pName: "", pStatus: "Active", pCategory: "", pLevel: "", pFile: "", pGrade: 1, pDescriptor1: "", pDescriptor2: "", pDescriptor3: "", pCode1: "", pCode2: "", pCode3: "", pKeywords: [], success: false, error: false })
 							}, 2000)
 					} else if (responseData.error) {
 							setFdata({ ...fData, success: false, error: responseData.error })
@@ -122,7 +123,7 @@ const AddProductDetail = ({ categories }) => {
 		return (
 				<Fragment>
 					{/* Black Overlay */}
-					<div onClick={e=> dispatch({type:"addProductModal",payload:false})} className={`${data.addProductModal ? "" : "hidden"} fixed top-0 left-0 z-30 w-full h-full bg-black opacity-50`} />
+					<div onClick={e=> dispatch({type:"addProductModal",payload:false})} className={`${data.addProductModal ? "" : "hidden"} fixed top-0 left-0 z-30 w-full h-screen bg-black opacity-50`} />
 					{/* End Black Overlay */}
 
 					{/* Modal Start */}
@@ -136,7 +137,7 @@ const AddProductDetail = ({ categories }) => {
 							{ fData.error ? alert(fData.error,"red") : ""}
 							{ fData.success ? alert(fData.success,"green") : ""}
 							<form className="w-full" onSubmit={e=> submitForm(e)}>
-								<div className="flex space-x-1 py-4">
+								<div className="flex space-x-1 py-2">
 									<div className="w-1/2 flex flex-col space-y-1">
 										<label htmlFor="name">Worksheet Name *</label>
 										<input 
@@ -157,7 +158,7 @@ const AddProductDetail = ({ categories }) => {
 										</select>
 									</div>
 								</div>
-								<div className="flex space-x-1 py-4">
+								<div className="flex space-x-1 py-2">
 									<div className="w-1/2 flex flex-col space-y-1">
 										<label htmlFor="subject">Worksheet Subject *</label>
 										<select 
@@ -187,7 +188,7 @@ const AddProductDetail = ({ categories }) => {
 										/>
 									</div>
 								</div>
-								<div className="flex space-x-1 py-4">
+								<div className="flex space-x-1 py-2">
 									<div className="w-1/2 flex flex-col space-y-1">
 										<label htmlFor="difficulty">Worksheet Difficulty *</label>
 										<select 
@@ -228,54 +229,56 @@ const AddProductDetail = ({ categories }) => {
 								</div>
 								{
 									descriptorSelected ?
-									<div>
-										<div className="flex space-x-1 py-4">
-											<div className="w-full flex flex-col space-y-2">
-												<label htmlFor="descriptor2">Content Descriptor 2 *</label>
-												<select 
-													value={fData.pDescriptor2} 
-													onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor2: e.target.value.split('-')[0], pCode2: e.target.value.split('-')[1]})}
-													name="descriptor2" 
-													className="px-4 py-2 border focus:outline-none" id="descriptor2">
-													<option disabled value="">Select a descriptor</option>
-													{
-														descriptorContent2.length>0
-														? descriptorContent2.map(function(elem) {
-															return (
-																<option value={elem._id + '-' + elem.dCode} key={elem._id}>{elem.dContent} - {elem.dCode}</option>
-															)
-														})
-														: ""
-													}
-												</select>
-											</div>
+									<div className="flex space-x-1 py-2">
+										<div className="w-1/2 flex flex-col space-y-2">
+											<label htmlFor="descriptor2">Content Descriptor 2 *</label>
+											<select 
+												value={fData.pDescriptor2} 
+												onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor2: e.target.value.split('-')[0], pCode2: e.target.value.split('-')[1]})}
+												name="descriptor2" 
+												className="px-4 py-2 border focus:outline-none" id="descriptor2">
+												<option disabled value="">Select a descriptor</option>
+												{
+													descriptorContent2.length>0
+													? descriptorContent2.map(function(elem) {
+														return (
+															<option value={elem._id + '-' + elem.dCode} key={elem._id}>{elem.dContent} - {elem.dCode}</option>
+														)
+													})
+													: ""
+												}
+											</select>
 										</div>
-										<div className="flex space-x-1 py-4">
-											<div className="w-full flex flex-col space-y-2">
-												<label htmlFor="descriptor3">Content Descriptor 3 *</label>
-												<select 
-													value={fData.pDescriptor3} 
-													onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor3: e.target.value.split('-')[0], pCode3: e.target.value.split('-')[1]})}
-													name="descriptor3" 
-													className="px-4 py-2 border focus:outline-none" id="descriptor3">
-													<option disabled value="">Select a descriptor</option>
-													{
-														descriptorContent3.length>0
-														? descriptorContent3.map(function(elem) {
-															return (
-																<option value={elem._id + '-' + elem.dCode} key={elem._id}>{elem.dContent} - {elem.dCode}</option>
-															)
-														})
-														: ""
-													}
-												</select>
-											</div>
+										<div className="w-1/2 flex flex-col space-y-2">
+											<label htmlFor="descriptor3">Content Descriptor 3 *</label>
+											<select 
+												value={fData.pDescriptor3} 
+												onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor3: e.target.value.split('-')[0], pCode3: e.target.value.split('-')[1]})}
+												name="descriptor3" 
+												className="px-4 py-2 border focus:outline-none" id="descriptor3">
+												<option disabled value="">Select a descriptor</option>
+												{
+													descriptorContent3.length>0
+													? descriptorContent3.map(function(elem) {
+														return (
+															<option value={elem._id + '-' + elem.dCode} key={elem._id}>{elem.dContent} - {elem.dCode}</option>
+														)
+													})
+													: ""
+												}
+											</select>
 										</div>
 									</div>
 									
 									: ""
 								}
-								<div className="flex flex-col mt-4">
+								<div className="flex space-x-1 py-2">
+									<div className="w-1/2 flex flex-col space-y-2">
+										<label htmlFor="tags">Worksheet Tags *</label>
+										<TagsInput setFdata={setFdata} fData={fData}/>
+									</div>
+								</div>
+								<div className="flex flex-col mt-2">
 									<label htmlFor="worksheet">Worksheet File *</label>
 									<span className="text-gray-600 text-xs">(Accept .docx, .pdf format)</span>
 									<input 

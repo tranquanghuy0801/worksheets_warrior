@@ -44,11 +44,10 @@ class Product {
     }
 
     async postAddProduct(req, res) {
-        let { pName, pCategory, pGrade, pLevel, pStatus, pDescriptor1, pDescriptor2, pDescriptor3, pFileName } = req.body
+        let { pName, pCategory, pGrade, pLevel, pStatus, pDescriptor1, pDescriptor2, pDescriptor3, pFileName, pKeywords } = req.body
         let files = req.files
         console.log("Upload images");
         console.log(files);
-        console.log(req.body);
         // Validate File upload
         if (files.length != 1) {
             return res.json({ error: "Must need to upload the worksheet file" })
@@ -94,7 +93,8 @@ class Product {
                         pFile: pFileName,
                         pDescriptor1,
                         pDescriptor2,
-                        pDescriptor3
+                        pDescriptor3,
+                        pKeywords: pKeywords.split(',')
                     })
                     let save = await newProduct.save()
                     if (save) {
@@ -109,9 +109,16 @@ class Product {
     }
 
     async postEditProduct(req, res) {
-        let { pId, pName, pStatus, pGrade, pLevel, pFile, pDescriptor1, pDescriptor2, pDescriptor3, pFileName } = req.body
+        let { pId, pName, pStatus, pGrade, pLevel, pFile, pDescriptor1, pDescriptor2, pDescriptor3, pFileName, pKeywords } = req.body
         let files = req.files;
         console.log(files);
+        if (pKeywords === "") {
+            pKeywords = [];
+        } else if (!pKeywords.includes(",")) {
+            pKeywords = [pKeywords];
+        } else {
+            pKeywords = pKeywords.split(",");
+        }
         let editData = {
             pName,
             pGrade,
@@ -120,6 +127,7 @@ class Product {
             pDescriptor1: pDescriptor1,
             pDescriptor2: pDescriptor2,
             pDescriptor3: pDescriptor3,
+            pKeywords: pKeywords,
         }
         // Validate other fileds
         if (!pId | !pName | !pLevel | !pDescriptor1 | !pDescriptor2 | !pDescriptor3 | !pStatus) {

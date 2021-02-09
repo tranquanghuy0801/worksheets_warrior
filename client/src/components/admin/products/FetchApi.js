@@ -11,7 +11,7 @@ export const getAllProduct = async () => {
 
 }
 
-export const createProduct = async ({ pName, pStatus, pGrade, pCategory, pLevel, pFile, pDescriptor1, pDescriptor2, pDescriptor3, pCode1, pCode2, pCode3 }) => {
+export const createProduct = async ({ pName, pStatus, pGrade, pCategory, pLevel, pFile, pDescriptor1, pDescriptor2, pDescriptor3, pCode1, pCode2, pCode3, pKeywords }) => {
 	/* Most important part for uploading multiple image  */
 	let formData = new FormData();
 	/* Most important part for uploading multiple image  */
@@ -25,6 +25,7 @@ export const createProduct = async ({ pName, pStatus, pGrade, pCategory, pLevel,
 	formData.append("pDescriptor3", pDescriptor3)
 	formData.append("pFileName", pCode1 + pCode2 + pCode3 +  pLevel + '-1.pdf')
 	formData.append("pFile", pFile)
+	formData.append("pKeywords", pKeywords)
 	try {
 		let res = await axios.post(`${apiURL}/api/product/add-product`, formData)
 		console.log(res);
@@ -42,7 +43,8 @@ export const editProduct = async (product) => {
 	editFormData.append("pName", product.pName)
 	editFormData.append("pStatus", product.pStatus)
 	editFormData.append("pGrade", parseInt(product.pGrade))
-	editFormData.append("pLevel", product.pLevel);
+	editFormData.append("pLevel", product.pLevel)
+	editFormData.append("pKeywords", product.pKeywords)
 	// if (product.pCategory._id) {
 	// 	editFormData.append("pCategory", product.pCategory._id)
 	// } else {

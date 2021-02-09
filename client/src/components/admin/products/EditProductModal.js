@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useState, useEffect } from 'react';
 import { ProductContext } from "./index";
 import { editProduct, getAllProduct, getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "./FetchApi";
 import { getAllCategory } from "../categories/FetchApi";
+import TagsInput from './TagsInput';
 const apiURL = process.env.REACT_APP_API_URL
 
 const EditProductModal = (props) => {
@@ -27,6 +28,7 @@ const EditProductModal = (props) => {
         pDescriptor1: "",
         pDescriptor2: "",
         pDescriptor3: "",
+        pKeywords: [],
         error: false,
         success: false,
     })
@@ -96,7 +98,9 @@ const EditProductModal = (props) => {
             pDescriptor1: data.editProductModal.pDescriptor1,
             pDescriptor2: data.editProductModal.pDescriptor2,
             pDescriptor3: data.editProductModal.pDescriptor3,
+            pKeywords: data.editProductModal.pKeywords,
         })
+        console.log(data.editProductModal.pKeywords)
         if (data.editProductModal.pCategory && data.editProductModal.pGrade) {
           fetchDescriptor1(data.editProductModal.pCategory, data.editProductModal.pGrade)
         }
@@ -160,7 +164,7 @@ const EditProductModal = (props) => {
               { editformData.error ? alert(editformData.error,"red") : ""}
               { editformData.success ? alert(editformData.success,"green") : ""}
                <form className="w-full" onSubmit={e=> submitForm(e)}>
-                <div className="flex space-x-1 py-4">
+                <div className="flex space-x-1 py-2">
                   <div className="w-1/2 flex flex-col space-y-1 space-x-1">
                     <label htmlFor="name">Worksheet Name *</label>
                     <input 
@@ -181,7 +185,7 @@ const EditProductModal = (props) => {
                     </select>
                   </div>
                 </div>
-                <div className="flex space-x-1 py-4">
+                <div className="flex space-x-1 py-2">
                   <div className="w-1/2 flex flex-col space-y-1">
                     <label htmlFor="subject">Worksheet Subject *</label>
                     <h1 className="px-4 py-2 border focus:outline-none" id="subject">{editformData.pCategory.cName}</h1>
@@ -211,7 +215,7 @@ const EditProductModal = (props) => {
                     <h1 className="px-4 py-2 border focus:outline-none" id="subject">{editformData.pGrade}</h1>
                   </div>
                 </div>
-                <div className="flex space-x-1 py-4">
+                <div className="flex space-x-1 py-2">
                   <div className="w-1/2 flex flex-col space-y-1">
 										<label htmlFor="difficulty">Worksheet Difficulty *</label>
 										<select 
@@ -226,7 +230,7 @@ const EditProductModal = (props) => {
 										</select>
 									</div>
                   <div className="w-1/2 flex flex-col space-y-1">
-                    <label htmlFor="subject">Worksheet Descriptor 1 *</label>
+                    <label htmlFor="subject">Content Descriptor 1 *</label>
                     <select 
 												value={typeof editformData.pDescriptor1 !== 'string' ? editformData.pDescriptor1._id + '-' + editformData.pDescriptor1.dCode : editformData.pDescriptor1} 
 												onChange={e=> firstDescriptorHandle(e)}
@@ -245,9 +249,9 @@ const EditProductModal = (props) => {
 										</select> 
                   </div>
                 </div>
-                <div className="flex space-x-1 py-4">
-                  <div className="w-full flex flex-col space-y-1">
-                    <label htmlFor="subject">Worksheet Descriptor 2 *</label>
+                <div className="flex space-x-1 py-2">
+                  <div className="w-1/2 flex flex-col space-y-1">
+                    <label htmlFor="subject">Content Descriptor 2 *</label>
                     <select 
 												value={typeof editformData.pDescriptor2 !== 'string' ? editformData.pDescriptor2._id + '-' + editformData.pDescriptor2.dCode : editformData.pDescriptor2} 
 												onChange={e=> setEditformdata({...editformData,error:false,success:false,pDescriptor2:e.target.value})}
@@ -265,10 +269,8 @@ const EditProductModal = (props) => {
 												}
 										</select> 
                   </div>
-                </div>
-                <div className="flex space-x-1 py-4">
-                  <div className="w-full flex flex-col space-y-1">
-                    <label htmlFor="subject">Worksheet Descriptor 3 *</label>
+                  <div className="w-1/2 flex flex-col space-y-1">
+                    <label htmlFor="subject">Content Descriptor 3 *</label>
                     <select 
 												value={typeof editformData.pDescriptor3 !== 'string' ? editformData.pDescriptor3._id + '-' + editformData.pDescriptor3.dCode : editformData.pDescriptor3} 
 												onChange={e=> setEditformdata({...editformData,error:false,success:false,pDescriptor3:e.target.value})}
@@ -287,7 +289,13 @@ const EditProductModal = (props) => {
 										</select> 
                   </div>
                 </div>
-                <div className="flex flex-col mt-4">
+                <div className="flex space-x-1 py-2">
+									<div className="w-1/2 flex flex-col space-y-2">
+										<label htmlFor="tags">Worksheet Tags *</label>
+										<TagsInput setFdata={setEditformdata} fData={editformData}/>
+									</div>
+								</div>
+                <div className="flex flex-col mt-2">
 									<label htmlFor="worksheet">Worksheet File *</label>
                   {/* {
                     editformData.pFile ? (
