@@ -39,7 +39,8 @@ export const homeReducer = (state, action) => {
             return {
                 ...state,
                 products: action.productArray && action.productArray.filter(item=> {
-                    if(item.pName.toUpperCase().indexOf(action.payload.toUpperCase()) !== -1 ){
+                    if(item.pName.toLowerCase().includes(action.payload.toLowerCase()) || 
+                    item.pKeywords.join(" ").toLowerCase().includes(action.payload.toLowerCase())){
                         return item
                     }
                     return null

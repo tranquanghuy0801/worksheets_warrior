@@ -6,5 +6,5 @@ img
 .env
 .DS_Store
 build
-test.js
+addDescriptor.js
 data/
