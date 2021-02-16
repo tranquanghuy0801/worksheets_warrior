@@ -1,4 +1,5 @@
 import Home from "./home";
+import ProductByCategoryDescriptor from "./home/ProductByCategoryDescriptor";
 import WishList from "./wishlist";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminProtectedRoute from "./auth/AdminProtectedRoute";
@@ -8,12 +9,12 @@ import { layoutState, layoutReducer } from "./layout/layoutContext";
 import { isAdmin, isAuthenticate } from "./auth/fetchApi";
 import PageNotFound from "./layout/PageNotFound";
 import ProductDetails from "./productDetails";
-import ProductByCategory from "./home/ProductByCategory";
 import CheckoutPage from "./order/CheckoutPage";
 import Membership from "./membership";
 
 export {
     Home,
+    ProductByCategoryDescriptor,
     WishList,
     ProtectedRoute,
     AdminProtectedRoute,
@@ -25,7 +26,6 @@ export {
     isAuthenticate,
     PageNotFound,
     ProductDetails,
-    ProductByCategory,
     CheckoutPage,
     Membership,
 }

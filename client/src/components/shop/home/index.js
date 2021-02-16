@@ -1,25 +1,24 @@
 import React, { Fragment, createContext, useReducer } from 'react';
 import Layout from "../layout";
 import SliderPic from "./Slider";
-import ProductCategory from "./ProductCategory";
+import ProductControl from "./ProductControl";
 import { homeState, homeReducer } from "./HomeContext";
-import SingleProduct from "./SingleProduct";
+import ProductHomePage from "./ProductHomePage";
 
 export const HomeContext = createContext();
 
 const HomeComponent = () => {
     return (
         <Fragment>
-			<div className="h-10">
+			<div className="h-20">
 
 			</div>
-			<SliderPic/>
-			{/* Category, Search & Filter Section */}
-			<section className="m-4 md:mx-8 md:my-6">
-				<ProductCategory/>
+			{/* <SliderPic/> */}
+			<section className="h-15 m-4 md:mx-8 md:my-6">
+				<ProductControl/>
 			</section>
 			<section className="m-4 md:mx-8 md:my-6">
-				<SingleProduct/>
+				<ProductHomePage/>
 			</section>
 		</Fragment>
     )

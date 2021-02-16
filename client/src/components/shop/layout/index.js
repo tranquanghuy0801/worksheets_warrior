@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
 		    <div className="flex-grow">    	
 				<Navber />
 				<LoginSignup />
-				<CartModal />
+				{/* <CartModal /> */}
 				{/* All Children pass from here */}
 				{children}
 		    </div>

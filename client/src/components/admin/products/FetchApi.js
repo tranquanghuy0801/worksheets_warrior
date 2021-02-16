@@ -98,15 +98,6 @@ export const deleteProduct = async (pId) => {
 	}
 }
 
-export const productByCategory = async (catId) => {
-	try {
-		let res = await axios.post(`${apiURL}/api/product/product-by-category`, { catId })
-		return res.data;
-	} catch (error) {
-		console.log(error);
-	}
-}
-
 export const getDescriptorFirst = async (cId, grade) => {
 	try {
 		if (typeof cId !== 'string') {

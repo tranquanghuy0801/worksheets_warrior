@@ -1,4 +1,4 @@
-export const isWish = (id,wList)=> {
+export const isWish = (id,wList) => {
 	if(wList !== null && wList.includes(id) === true){
 		return true
 	}
@@ -11,7 +11,7 @@ export const levels = {
 	'H': 'Hard'
 }
 
-export const isWishReq = (e,id,setWlist)=> {
+export const isWishReq = (e,id,setWlist) => {
 	let list = localStorage.getItem("wishList") ? JSON.parse(localStorage.getItem("wishList")) : []
 	if(list.length > 0){
 		if(list.includes(id) !== true){
@@ -26,7 +26,7 @@ export const isWishReq = (e,id,setWlist)=> {
 	}
 }
 
-export const unWishReq = (e,id,setWlist)=> {
+export const unWishReq = (e,id,setWlist) => {
 	let list = localStorage.getItem("wishList") ? JSON.parse(localStorage.getItem("wishList")) : []
 	if(list.length > 0){
 		if(list.includes(id) === true){
@@ -37,7 +37,7 @@ export const unWishReq = (e,id,setWlist)=> {
 	}
 }
 
-export const nextSlide = (totalImg, slide, setSlide)=> {
+export const nextSlide = (totalImg, slide, setSlide) => {
 	if (slide === totalImg-1){
 		setSlide(0)
 	}
@@ -46,7 +46,7 @@ export const nextSlide = (totalImg, slide, setSlide)=> {
 	}
 }
 
-export const prevSlide = (totalImg, slide, setSlide)=> {
+export const prevSlide = (totalImg, slide, setSlide) => {
 	if (slide === 0) {
 		setSlide(totalImg-1)
 	}
@@ -55,6 +55,22 @@ export const prevSlide = (totalImg, slide, setSlide)=> {
 	}
 }
 
-export const chooseSlide = (index, setSlide)=> {
+export const chooseSlide = (index, setSlide) => {
 	setSlide(index);
+}
+
+export const groupProductsByThirdDescriptor = (products) => {
+	let output = {};
+	if (products && products.length > 0 ) {
+		products.forEach(product => {
+			if (!output[product.pDescriptor3._id]){
+				output[product.pDescriptor3._id] = {};
+				output[product.pDescriptor3._id].listProducts = [];
+				output[product.pDescriptor3._id].name = product.pDescriptor3.dContent;
+				output[product.pDescriptor3._id].id = product.pDescriptor3._id;
+			}
+			output[product.pDescriptor3._id].listProducts.push(product);
+		})
+	}
+	return Object.values(output);
 }
