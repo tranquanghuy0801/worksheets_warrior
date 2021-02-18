@@ -36,7 +36,6 @@ const AddProductDetail = ({ categories }) => {
 
 		const subjectHandle = (e) => {
 			setFdata({...fData,error:false,success:false,pCategory:e.target.value});
-			setSubjectSelected(true);
 			setDescriptorSelected(false);
 			fetchDescriptor1(e.target.value, fData.pGrade);
 		}
@@ -44,16 +43,14 @@ const AddProductDetail = ({ categories }) => {
 		const gradeHandle = (e) => {
 			setFdata({...fData, error: false, success: false, pGrade: e.target.value});
 			if (fData.pCategory) {
-				setSubjectSelected(true);
-				setDescriptorSelected(false);
 				fetchDescriptor1(fData.pCategory, e.target.value);
 			}
 		}
 
 		const descriptorFirstHandle = (e) => {
-			setFdata({...fData, error: false, success: false, pDescriptor1: e.target.value.split('-')[0], pCode1: e.target.value.split('-')[1]})
-			fetchDescriptor2(e.target.value.split('-')[0]);
-			fetchDescriptor3(e.target.value.split('-')[0]);
+			setFdata({...fData, error: false, success: false, pDescriptor1: e, pCode1: e.split('-')[1]})
+			fetchDescriptor2(e.split('-')[0]);
+			fetchDescriptor3(e.split('-')[0]);
 			setDescriptorSelected(true);
 		}
 
@@ -62,6 +59,14 @@ const AddProductDetail = ({ categories }) => {
 			setTimeout(() => {
 				if (responseData && responseData.Descriptors) {
 					setContent1(responseData.Descriptors);
+					if (responseData.Descriptors.length > 0) {
+						let firstVal = responseData.Descriptors[0]._id + '-' + responseData.Descriptors[0].dCode;
+						setFdata.pDescriptor1 = firstVal;
+						setFdata.pCode1 = firstVal.split('-')[1];
+						fetchDescriptor2(firstVal.split('-')[0]);
+						fetchDescriptor3(firstVal.split('-')[0]);
+						setDescriptorSelected(true);
+					}
 				}
 			}, 1000)
 		}
@@ -70,7 +75,6 @@ const AddProductDetail = ({ categories }) => {
 			let responseData = await getDescriptorSecond(firstId);
 			setTimeout(() => {
 				if (responseData && responseData.Descriptors) {
-					console.log(responseData.Descriptors);
 					setContent2(responseData.Descriptors);
 				}
 			}, 1000)
@@ -80,7 +84,6 @@ const AddProductDetail = ({ categories }) => {
 			let responseData = await getDescriptorThird(firstId);
 			setTimeout(() => {
 				if (responseData && responseData.Descriptors) {
-					console.log(responseData.Descriptors);
 					setContent3(responseData.Descriptors);
 				}
 			}, 1000)
@@ -203,29 +206,25 @@ const AddProductDetail = ({ categories }) => {
 											<option name="difficulty" value="H">Hard</option>
 										</select>
 									</div>
-									{
-										subjectSelected ? 
-										<div className="w-1/2 flex flex-col space-y-1">
-											<label htmlFor="descriptor1">Content Descriptor 1 *</label>
-											<select 
-												value={fData.pDescriptor1} 
-												onChange={e=> descriptorFirstHandle(e)}
-												name="descriptor1" 
-												className="px-4 py-2 border focus:outline-none" id="descriptor1">
-												<option disabled value="">Select a descriptor</option>
-												{
-													descriptorContent1.length>0
-													? descriptorContent1.map(function(elem) {
-														return (
-															<option value={elem._id + '-' + elem.dCode} key={elem._id}>{elem.dContent} - {elem.dCode}</option>
-														)
-													})
-													: ""
-												}
-											</select>
-										</div>
-										: ""
-									}
+									<div className="w-1/2 flex flex-col space-y-1">
+										<label htmlFor="descriptor1">Content Descriptor 1 *</label>
+										<select 
+											value={fData.pDescriptor1} 
+											onChange={e=> descriptorFirstHandle(e.target.value)}
+											name="descriptor1" 
+											className="px-4 py-2 border focus:outline-none" id="descriptor1">
+											<option disabled value="">Select a descriptor</option>
+											{
+												descriptorContent1.length>0
+												? descriptorContent1.map(function(elem) {
+													return (
+														<option value={elem._id + '-' + elem.dCode} key={elem._id}>{elem.dContent} - {elem.dCode}</option>
+													)
+												})
+												: ""
+											}
+										</select>
+									</div>
 								</div>
 								{
 									descriptorSelected ?
@@ -234,7 +233,7 @@ const AddProductDetail = ({ categories }) => {
 											<label htmlFor="descriptor2">Content Descriptor 2 *</label>
 											<select 
 												value={fData.pDescriptor2} 
-												onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor2: e.target.value.split('-')[0], pCode2: e.target.value.split('-')[1]})}
+												onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor2: e.target.value, pCode2: e.target.value.split('-')[1]})}
 												name="descriptor2" 
 												className="px-4 py-2 border focus:outline-none" id="descriptor2">
 												<option disabled value="">Select a descriptor</option>
@@ -253,7 +252,7 @@ const AddProductDetail = ({ categories }) => {
 											<label htmlFor="descriptor3">Content Descriptor 3 *</label>
 											<select 
 												value={fData.pDescriptor3} 
-												onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor3: e.target.value.split('-')[0], pCode3: e.target.value.split('-')[1]})}
+												onChange={e=> setFdata({...fData, error: false, success: false, pDescriptor3: e.target.value, pCode3: e.target.value.split('-')[1]})}
 												name="descriptor3" 
 												className="px-4 py-2 border focus:outline-none" id="descriptor3">
 												<option disabled value="">Select a descriptor</option>

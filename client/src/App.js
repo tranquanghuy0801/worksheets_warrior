@@ -1,5 +1,7 @@
 import React, { Fragment, useReducer } from 'react';
 import Routes from './components';
+import './style.css';
+import { hot } from 'react-hot-loader/root'
 import { LayoutContext, layoutState, layoutReducer } from "./components/shop";
 
 function App() {
@@ -13,4 +15,4 @@ function App() {
     )
 }
 
-export default App;
+export default process.env.NODE_ENV === "development" ? hot(App) : App

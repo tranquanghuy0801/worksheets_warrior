@@ -60,7 +60,6 @@ const EditProductModal = (props) => {
 			let responseData = await getDescriptorSecond(firstId);
 			setTimeout(() => {
 				if (responseData && responseData.Descriptors) {
-					console.log(responseData.Descriptors);
 					setContent2(responseData.Descriptors);
 				}
 			}, 1000)
@@ -70,7 +69,6 @@ const EditProductModal = (props) => {
 			let responseData = await getDescriptorThird(firstId);
 			setTimeout(() => {
 				if (responseData && responseData.Descriptors) {
-					console.log(responseData.Descriptors);
 					setContent3(responseData.Descriptors);
 				}
 			}, 1000)
@@ -100,7 +98,6 @@ const EditProductModal = (props) => {
             pDescriptor3: data.editProductModal.pDescriptor3,
             pKeywords: data.editProductModal.pKeywords,
         })
-        console.log(data.editProductModal.pKeywords)
         if (data.editProductModal.pCategory && data.editProductModal.pGrade) {
           fetchDescriptor1(data.editProductModal.pCategory, data.editProductModal.pGrade)
         }
@@ -124,7 +121,7 @@ const EditProductModal = (props) => {
         e.preventDefault();
         console.log(editformData);
         if (!editformData.pEditFile) {
-          console.log("File Not upload=============", editformData);
+          console.log("File Not upload=============");
         } else {
           console.log("File uploading");
         }

@@ -48,6 +48,13 @@ class Product {
 		let files = req.files
 		console.log("Upload images");
 		console.log(files);
+		if (pKeywords === "") {
+			pKeywords = [];
+		} else if (!pKeywords.includes(",")) {
+			pKeywords = [pKeywords];
+		} else {
+			pKeywords = pKeywords.split(",");
+		}
 		// Validate File upload
 		if (files.length != 1) {
 			return res.json({ error: "Must need to upload the worksheet file" })
@@ -94,7 +101,7 @@ class Product {
 						pDescriptor1,
 						pDescriptor2,
 						pDescriptor3,
-						pKeywords: pKeywords.split(',')
+						pKeywords: pKeywords
 					})
 					let save = await newProduct.save()
 					if (save) {
