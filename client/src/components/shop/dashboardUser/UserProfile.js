@@ -10,18 +10,23 @@ const ProfileComponent = () => {
 
     const [fData, setFdata] = useState({
         id: "",
-        name: "",
+        firstName: "",
+		lastName: "",
+		city: "",
+		state: "",
+		postCode: "",
         email: "",
-        phone: "",
-        success:false,
+        success: false,
+		message: false
     })
 
     useEffect(() => {
-        setFdata({ ...fData, id: userDetails._id, name: userDetails.name, email: userDetails.email, phone: userDetails.phoneNumber })
+        setFdata({ ...fData, id: userDetails._id, firstName: userDetails.firstName, lastName: userDetails.lastName, 
+			email: userDetails.email, city: userDetails.city, state: userDetails.state, postCode: userDetails.postCode })
     }, [userDetails])
 
     const handleSubmit = () => {
-        updatePersonalInformationAction(dispatch, fData)
+        updatePersonalInformationAction(dispatch, fData, setFdata)
     }
 
     if (data.loading) {
@@ -37,9 +42,16 @@ const ProfileComponent = () => {
 						{
 							fData.success ? <div className="bg-green-200 px-4 py-2 rounded">{fData.success}</div> : ""
 						}
+						{
+							fData.message ? <div className="bg-red-200 px-4 py-2 rounded">{fData.message}</div> : ""
+						}
 						<div className="flex flex-col space-y-2">
-							<label htmlFor="name">Name</label>
-							<input onChange={e=> setFdata({...fData,name:e.target.value})} value={fData.name} type="text" id="name" className="border px-4 py-2 w-full focus:outline-none" />
+							<label htmlFor="firstName">First Name</label>
+							<input onChange={e=> setFdata({...fData,firstName:e.target.value})} value={fData.firstName} type="text" id="firstName" className="border px-4 py-2 w-full focus:outline-none" />
+						</div>
+						<div className="flex flex-col space-y-2">
+							<label htmlFor="lastName">Last Name</label>
+							<input onChange={e=> setFdata({...fData,lastName:e.target.value})} value={fData.lastName} type="text" id="lastName" className="border px-4 py-2 w-full focus:outline-none" />
 						</div>
 						<div className="flex flex-col space-y-2">
 							<label htmlFor="email">Email</label>
@@ -47,8 +59,26 @@ const ProfileComponent = () => {
 							<span className="text-xs text-gray-500">You can't change your email</span>
 						</div>
 						<div className="flex flex-col space-y-2">
-							<label htmlFor="number">Phone Number</label>
-							<input onChange={e=> setFdata({...fData,phone:e.target.value})} value={fData.phone} type="number" id="number" className="border px-4 py-2 w-full focus:outline-none" />
+							<label htmlFor="city">City</label>
+							<input onChange={e=> setFdata({...fData,city:e.target.value})} value={fData.city} type="text" id="city" className="border px-4 py-2 w-full focus:outline-none" />
+						</div>
+						<div className="flex flex-col space-y-2">
+							<label htmlFor="state">State</label>
+							<select onChange={e=> setFdata({...fData,state:e.target.value})} value={fData.state} type="text" id="state" className="border px-4 py-2 w-full focus:outline-none">
+								<option disabled value="">Select a state</option>
+								<option>ACT</option>
+								<option>NSW</option>
+								<option>VIC</option>
+								<option>QLD</option>
+								<option>SA</option>
+								<option>WA</option>
+								<option>NT</option>
+								<option>TAS</option>
+							</select>
+						</div>
+						<div className="flex flex-col space-y-2">
+							<label htmlFor="postCode">Postcode</label>
+							<input onChange={e=> setFdata({...fData,postCode:e.target.value})} value={fData.postCode} type="text" id="postCode" className="border px-4 py-2 w-full focus:outline-none" />
 						</div>
 						<div onClick={e=> handleSubmit()} style={{background: '#303031'}} className="w-full text-center cursor-pointer px-4 py-2 text-gray-100">Update Information</div>
 					</div>

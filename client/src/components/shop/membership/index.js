@@ -1,13 +1,13 @@
 import React, { Fragment, createContext, useReducer } from 'react';
 import Layout from "../layout";
-import PriceInfo from './PriceInfo';
+import MembershipSignup from "./MembershipSignup";
 
 const MembershipComponent = () => {
     return (
         <Fragment>
 			{/* Category, Search & Filter Section */}
 			<section className="m-4 md:mx-8 md:my-6">
-				<PriceInfo/>
+				<MembershipSignup />
 			</section>
 			{/* Product Section */}
 		</Fragment>

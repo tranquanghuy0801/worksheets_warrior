@@ -8,8 +8,6 @@ import { LayoutContext } from "./layout";
 import { layoutState, layoutReducer } from "./layout/layoutContext";
 import { isAdmin, isAuthenticate } from "./auth/fetchApi";
 import PageNotFound from "./layout/PageNotFound";
-import ProductDetails from "./productDetails";
-import CheckoutPage from "./order/CheckoutPage";
 import Membership from "./membership";
 
 export {
@@ -25,7 +23,5 @@ export {
     isAdmin,
     isAuthenticate,
     PageNotFound,
-    ProductDetails,
-    CheckoutPage,
     Membership,
 }

@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useState, useEffect } from 'react';
 import { ProductContext } from "./index";
-import { createProduct, getAllProduct, getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "./FetchApi";
+import { createProduct, getAllProduct } from "./FetchApi";
+import { getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "../../../Mixins/fetchDescriptor";
 import { getAllCategory } from "../categories/FetchApi";
 import TagsInput from './TagsInput';
 

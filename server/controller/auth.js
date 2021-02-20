@@ -1,6 +1,7 @@
 const {
     toTitleCase,
-    validateEmail
+    validateEmail,
+    validatePassword
 } = require('../config/function');
 const bcrypt = require('bcryptjs');
 const userModel = require('../models/users');
@@ -29,20 +30,24 @@ class Auth {
     }
 
     async postSignup(req, res) {
-        let { name, email, password, cPassword } = req.body
+        let { firstName, lastName, email, cEmail, password, cPassword, city, state, postCode } = req.body
         let error = {}
-        if (!name || !email || !password || !cPassword) {
-            error = { ...error, name: "Filed must not be empty", email: "Filed must not be empty", password: "Filed must not be empty", cPassword: "Filed must not be empty" }
+        if (!firstName || !lastName || !cEmail || !email || !password || !cPassword ||  !city || !state || !postCode) {
+            error = {...error, text: "All fields must not be empty"}
             return res.json({ error })
         }
-        if (name.length < 3 || name.length > 25) {
-            error = { ...error, name: "Name must be 3-25 charecter" }
+        if (firstName.length < 3 || lastName.length < 3) {
+            error = { ...error, firstName: "First Name must be 3 characters minimum", lastName: "Last Name must be 3 characters minimum" }
             return res.json({ error })
         } else {
             if (validateEmail(email)) {
-                name = toTitleCase(name)
-                if (password.length > 255 | password.length < 8) {
-                    error = { ...error, password: "Password must be 8 charecter", name: "", email: "" }
+                firstName = toTitleCase(firstName)
+                lastName = toTitleCase(lastName)
+                if (!validatePassword(password)) {
+                    error = { ...error, password: "Password must be at least 8 characters (includes at least 1 lowercase letter, 1 capital letter, 1 number and 1 special character)" }
+                    return res.json({ error })
+                } else if (postCode.length !== 4) {
+                    error = { ...error, postCode: "Invalid Postcode"}
                     return res.json({ error })
                 } else {
                     // Email & Number exists Logic
@@ -54,9 +59,13 @@ class Auth {
                             return res.json({ error })
                         } else {
                             let newUser = new userModel({
-                                name,
+                                firstName,
+                                lastName,
                                 email,
-                                password
+                                password,
+                                city,
+                                state,
+                                postCode
                             })
                             newUser.save()
                                 .then(data => {
@@ -69,7 +78,7 @@ class Auth {
                     }
                 }
             } else {
-                error = { ...error, password: "", name: "", email: "Email is not valid" }
+                error = { ...error, email: "Email is not valid" }
                 return res.json({ error })
             }
         }

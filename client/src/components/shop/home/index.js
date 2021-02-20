@@ -10,11 +10,8 @@ export const HomeContext = createContext();
 const HomeComponent = () => {
     return (
         <Fragment>
-			<div className="h-20">
-
-			</div>
 			{/* <SliderPic/> */}
-			<section className="h-15 m-4 md:mx-8 md:my-6">
+			<section className="m-4 md:mx-8 md:my-6">
 				<ProductControl/>
 			</section>
 			<section className="m-4 md:mx-8 md:my-6">

@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useState, useEffect } from 'react';
 import { ProductContext } from "./index";
-import { editProduct, getAllProduct, getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "./FetchApi";
+import { editProduct, getAllProduct } from "./FetchApi";
+import { getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "../../../Mixins/fetchDescriptor";
 import { getAllCategory } from "../categories/FetchApi";
 import TagsInput from './TagsInput';
 const apiURL = process.env.REACT_APP_API_URL

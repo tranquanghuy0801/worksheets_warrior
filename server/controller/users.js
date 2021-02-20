@@ -20,7 +20,7 @@ class User {
             return res.json({ error: "All filled must be required" })
         } else {
             try {
-                let User = await userModel.findById(uId).select('name email phoneNumber userImage updatedAt createdAt')
+                let User = await userModel.findById(uId).select('firstName lastName email city state postCode')
                 if (User) {
                     return res.json({ User })
                 }
@@ -56,11 +56,13 @@ class User {
     }
 
     async postEditUser(req, res) {
-        let { uId, name, phoneNumber } = req.body
-        if (!uId || !name || !phoneNumber) {
+        let { uId, firstName, lastName, city, state, postCode } = req.body
+        if (!uId || !firstName || !lastName || !city || !state || !postCode) {
             return res.json({ message: "All filled must be required" })
+        } else if (postCode.length !== 4) {
+            return res.json({ message: "Invalid Postcode" })
         } else {
-            let currentUser = userModel.findByIdAndUpdate(uId, { name: name, phoneNumber: phoneNumber, updatedAt: Date.now() })
+            let currentUser = userModel.findByIdAndUpdate(uId, { firstName, lastName, city, state, postCode, updatedAt: Date.now() })
             currentUser.exec((err, result) => {
                 if (err) console.log(err);
                 return res.json({ success: "User updated successfully" })

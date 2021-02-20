@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, ProductByCategoryDescriptor, Membership, WishList, ProtectedRoute, AdminProtectedRoute, CartProtectedRoute, PageNotFound, ProductDetails, CheckoutPage } from "./shop";
+import { Home, ProductByCategoryDescriptor, Membership, WishList, ProtectedRoute, AdminProtectedRoute, CartProtectedRoute, PageNotFound } from "./shop";
 import { DashboardAdmin, Categories, Products } from "./admin";
 import { UserProfile, SettingUser } from './shop/dashboardUser';
 
@@ -19,9 +19,7 @@ const Routes = (props) => {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/membership" component={Membership} />
                 <Route exact path="/wish-list" component={WishList} />
-                <Route exact path="/products/:id" component={ProductDetails} />
                 <Route exact path="/products/category/:catId/:dFirstId" component={ProductByCategoryDescriptor}/>
-                <CartProtectedRoute exact={true} path="/checkout" component={CheckoutPage} />
                 {/* Shop & Public Routes */}
 
 

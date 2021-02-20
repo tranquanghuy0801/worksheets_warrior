@@ -18,13 +18,22 @@ exports.validateEmail = function(mail) {
 
 }
 
+exports.validatePassword = function(password) {
+    if (/^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(password)) {
+        return true; 
+    } else {
+        return false;
+    }
+
+}
+
 exports.emailCheckInDatabase = async function(email) {
     let user = await userModel.findOne({ email: email })
     user.exec((err, data) => {
         if (!data) {
             return false;
         } else {
-            return true
+            return true;
         }
     })
 }

@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 import Layout from "../layout";
 import { HomeContext } from "./index";
-import { getProductByCategoryDescriptor } from "../partials/FetchApi";
+import { getProductByCategoryDescriptor } from "../../../Mixins/fetchDescriptor";
 import { groupProductsByThirdDescriptor  } from "./Mixins";
 import SingleWorksheet from "./SingleWorksheet";
 
@@ -10,9 +10,7 @@ const Submenu = ({ product }) => {
 	const history = useHistory();
 	return (
 	  <Fragment>
-		<section className="h-15 m-4 md:mx-8 md:my-6">
-			<div className="h-20">
-			</div>
+		<section className="m-4 md:mx-8 md:my-6">
 			<div className="flex inline-block font-medium">
 				<div className="flex items-center space-x-1 cursor-pointer">
 					<span className="text-md md:text-base">Year {product.pGrade} / {product.pCategory.cName} / {product.pDescriptor1.dContent}</span>

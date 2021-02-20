@@ -40,17 +40,26 @@ export const fetchOrderByUser = async (dispatch) => {
     }
 }
 
-export const updatePersonalInformationAction = async (dispatch, fData) => {
+export const updatePersonalInformationAction = async (dispatch, fData, setFdata) => {
 	const formData = {
     	uId: fData.id,
-        name: fData.name,
-        phoneNumber: fData.phone
+        firstName: fData.firstName,
+        lastName: fData.lastName,
+        city: fData.city,
+        state: fData.state,
+        postCode: fData.postCode
     }
     dispatch({ type: "loading", payload: true })
     try {
         let responseData = await updatePersonalInformationFetch(formData);
         setTimeout(() => {
-            if (responseData && responseData.success) {
+            if (responseData) {
+                if (responseData.success) {
+                    setFdata({ ...fData, success: responseData.success, message: false })
+                }
+                if (responseData.message) {
+                    setFdata({ ...fData, message: responseData.message, success: false })
+                }
                 dispatch({ type: "loading", payload: false })
                 fetchData(dispatch)
             }

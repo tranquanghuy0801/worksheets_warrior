@@ -1,5 +1,5 @@
 import React, { Fragment, createContext, useReducer, useEffect } from 'react';
-import { Navber, Footer, CartModal } from "../partials";
+import { Navber, Footer, TopBanner } from "../partials";
 import Sidebar from './Sidebar'
 import {dashboardUserState,dashboardUserReducer} from './DashboardUserContext'
 import {fetchData} from './Action'
@@ -16,16 +16,16 @@ const Layout = ({ children }) => {
     return (
         <Fragment>
 	        <DashboardUserContext.Provider value={{ data, dispatch }}>
-			    <div className="flex-grow">    	
+			    <div className="flex-grow">  
+					<TopBanner />  	
 					<Navber />
-					<CartModal />
-					<br></br>
-					<div className="mx-4 mt-24 md:mx-12 md:mt-32 lg:mt-24 flex flex-col md:flex-row">				
+					<div className="mx-4 mt-12 md:mx-12 md:mt-24 lg:mt-12 flex flex-col md:flex-row">				
 						<Sidebar/>
 						{/* All Children pass from here */}
 						{children}
 					</div>
 			    </div>
+				<br />
 			    <Footer/>
 			</DashboardUserContext.Provider>
     	</Fragment>

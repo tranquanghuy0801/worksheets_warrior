@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-	name: {
+	firstName: {
+		type: String,
+		required: true,
+		maxlength: 32,
+	},
+	lastName: {
 		type: String,
 		required: true,
 		maxlength: 32,
@@ -19,11 +24,20 @@ const userSchema = new mongoose.Schema({
 	},
 	userRole: {
 		type: Number,
-		default: 0,
+		default: 1,
 		required: true,
 	},
-	phoneNumber: {
-		type: Number,
+	postCode: {
+		type: String,
+		required: true,
+	},
+	city: {
+		type: String,
+		require: true,
+	},
+	state: {
+		type: String,
+		required: true,
 	},
 	userImage: {
 		type: String,

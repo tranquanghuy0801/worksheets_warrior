@@ -2,13 +2,10 @@ export const layoutState = {
     navberHamburger: false,
     loginSignupModal: false,
     loginSignupError:false,
-    cartModal: false,
-    cartProduct:null,
     singleProductDetail:null,
-    inCart:null,
-    cartTotalCost:null,
-    orderSuccess:false,
     loading:false,
+    showBanner: false,
+    mountBanner: true,
 }
 
 export const layoutReducer = (state, action) => {
@@ -23,45 +20,30 @@ export const layoutReducer = (state, action) => {
                 ...state,
                 loginSignupModal: action.payload
             }
-        case 'cartModalToggle':
-            return {
-                ...state,
-                cartModal: action.payload
-            }
-        case 'cartProduct':
-            return {
-                ...state,
-                cartProduct: action.payload
-            }
         case 'singleProductDetail':
             return {
                 ...state,
                 singleProductDetail: action.payload
-            }
-        case 'inCart':
-            return {
-                ...state,
-                inCart: action.payload
-            }
-        case 'cartTotalCost':
-            return {
-                ...state,
-                cartTotalCost: action.payload
             }
         case 'loginSignupError':
             return {
                 ...state,
                 loginSignupError: action.payload
             }
-        case 'orderSuccess':
-            return {
-                ...state,
-                orderSuccess: action.payload
-            }
         case 'loading':
             return {
                 ...state,
                 loading: action.payload
+            }
+        case 'showBanner':
+            return {
+                ...state,
+                showBanner: action.payload
+            }
+        case 'mountBanner':
+            return {
+                ...state,
+                mountBanner: action.payload
             }
         default:
             return state
