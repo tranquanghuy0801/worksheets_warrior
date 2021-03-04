@@ -1,7 +1,44 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useMemo } from 'react';
 import { signupReq } from "../auth/fetchApi";
+import { loadStripe } from '@stripe/stripe-js';
+import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import useResponsiveFontSize from "./useResponsiveFontSize";
 
-const MembershipSignup = (props) => {
+const useOptions = () => {
+	const fontSize = useResponsiveFontSize();
+	const options = useMemo(
+	  () => ({
+		style: {
+		  base: {
+			fontSize,
+			color: "#424770",
+			letterSpacing: "0.025em",
+			backgroundColor: "#ffffff",
+			fontFamily: "Source Code Pro, monospace",
+			"::placeholder": {
+			  color: "#aab7c4"
+			},
+		  },
+		  invalid: {
+			color: "#9e2146"
+		  }
+		}
+	  }),
+	  [fontSize]
+	);
+  
+	return options;
+};
+
+const MembershipForm = () => {
+
+	const stripe = useStripe();
+	const elements = useElements();
+	const options = useOptions();
+	const priceToDuration = {
+		2495: 12,
+		4490: 24
+	}
 
 	const [data, setData] = useState({
 		firstName: "",
@@ -10,9 +47,13 @@ const MembershipSignup = (props) => {
 		cEmail: "",
 		password: "",
 		cPassword: "",
+		address: "",
 		city: "",
-		state: "",
+		state: "QLD",
 		postCode: "",
+		amount: 2495,
+		duration: 12,
+		paymentID: "",
 		error: false,
 		loading: false,
 		success: false,
@@ -20,38 +61,66 @@ const MembershipSignup = (props) => {
 	const [showPassword, setShowPassword] = useState(false)
 	const alert = (msg, type) => <div className={`text-sm text-${type}-500`} >{msg}</div>
 
-	const formSubmit = async () => {
-        setData({ ...data, loading: true });
-        if (data.cPassword !== data.password) {
-            return setData({ ...data, error: { cPassword: "Password doesn't match", password: "Password doesn't match" } });
-        }
-		else if (data.cEmail !== data.email) {
-			return setData({ ...data, error: { cEmail: "Email doesn't match", email: "Email doesn't match" } });
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		setData({ ...data, error: {} });
+		const {error, paymentMethod} = await stripe.createPaymentMethod({
+			type: 'card',
+			card: elements.getElement(CardElement),
+			billing_details: {
+				address: {
+					line1: data.address,
+					city: data.city,
+					state: data.state,
+					country: 'AU',
+					postal_code: data.postCode
+				},
+				email: data.email,
+				name: `${data.firstName} ${data.lastName}`,
+			}
+		});
+
+		if (!error) {
+			console.log("Stripe 23 | token generated!", paymentMethod);
+			setData({ ...data, loading: true })
+			if (data.cPassword !== data.password) {
+				return setData({ ...data, error: { cPassword: "Password doesn't match", password: "Password doesn't match" } });
+			}
+			else if (data.cEmail !== data.email) {
+				return setData({ ...data, error: { cEmail: "Email doesn't match", email: "Email doesn't match" } });
+			}
+			try {
+				let responseData = await signupReq(data, paymentMethod.id);
+				if (responseData.error) {
+					setData({ ...data, loading: false, error: responseData.error, password: "", cPassword: "" })
+				} else if (responseData.success) {
+					setData({ success: responseData.success, firstName: "", lastName: "", email: "", password: "", cPassword: "", 
+						cEmail: "", address: "", state: "", city: "", postCode: "", loading: false, error: false })
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			console.log(error.message);
+			return setData({ ...data, error: { card: error.message } });
 		}
-        try {
-            let responseData = await signupReq(data);
-            if (responseData.error) {
-                setData({ ...data, loading: false, error: responseData.error, password: "", cPassword: "" })
-            } else if (responseData.success) {
-                setData({ success: responseData.success, firstName: "", lastName: "", email: "", password: "", cPassword: "", 
-					email: "", cEmail: "", state: "", city: "", postCode: "", loading: false, error: false })
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+	}
 
 	if (data.loading) {
 		return <div className="col-span-2 md:col-span-3 lg:col-span-4 flex items-center justify-center py-24"><svg className="w-12 h-12 animate-spin text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></div>
 	}
 	return (
 		<Fragment>
+		<form onSubmit={handleSubmit}>
 			<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+				<div class="-mx-3 md:flex mb-6">
+					<span className="text-left font-semibold text-2xl tracking-wider">Register Membership</span>
+				</div>
 				{
-					data.success ? <div className="bg-green-200 px-4 py-2 rounded">{data.success}</div> : ""
+					data.success ? <div className="bg-green-200 px-4 py-4 rounded">{data.success}</div> : ""
 				}
 				{
-					data.error.text ? <div className="bg-red-200 px-4 py-2 rounded">{data.error.text}</div> : ""
+					data.error.text ? <div className="bg-red-200 px-4 py-4 rounded">{data.error.text}</div> : ""
 				}
 				<div class="-mx-3 md:flex mb-6">
 					<div class="md:w-1/2 px-3 mb-6 md:mb-0">
@@ -122,32 +191,40 @@ const MembershipSignup = (props) => {
 					</div>
 				</div>
 				<div class="-mx-3 md:flex mb-2">
+					<div class="md:w-full px-3 mb-6 md:mb-0">
+						<label class="block uppercase tracking-wide text-grey-darker text-base font-bold mb-2">
+						Address *
+						</label>
+						<input onChange={e=> setData({...data,success:false,error:{},address:e.target.value})} className={`${data.error.address ? "border-red-500" : ""} appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3" id="grid-city`} type="text" value={data.address} required/>
+						{ !data.error.address ? "" : alert(data.error.address,"red") }
+					</div>
+				</div>
+				<div class="-mx-3 md:flex mb-2">
 					<div class="md:w-1/2 px-3 mb-6 md:mb-0">
 						<label class="block uppercase tracking-wide text-grey-darker text-base font-bold mb-2">
 							City *
 						</label>
-						<input onChange={e=> setData({...data,success:false,error:{},city:e.target.value})} className={`${data.error.city ? "border-red-500" : ""} appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4" id="grid-city`} type="text" value={data.city} required/>
+						<input onChange={e=> setData({...data,success:false,error:{},city:e.target.value})} className={`${data.error.city ? "border-red-500" : ""} appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3" id="grid-city`} type="text" value={data.city} required/>
 						{ !data.error.city ? "" : alert(data.error.city,"red") }
 					</div>
 					<div class="md:w-1/2 px-3">
 						<label class="block uppercase tracking-wide text-grey-darker text-base font-bold mb-2">
 							State *
 						</label>
-						<div class="relative">
-							<select onChange={e=> setData({...data,success:false,error:{},state:e.target.value})} value={data.state} className={`${data.error.state ? "border-red-500" : ""} block w-full bg-grey-lighter border border-grey-lighter text-grey-darker py-3 px-4 pr-8 rounded`} id="grid-state" required>
-								<option disabled value="">Select a state</option>
-								<option>ACT</option>
-								<option>NSW</option>
-								<option>VIC</option>
-								<option>QLD</option>
-								<option>SA</option>
-								<option>WA</option>
-								<option>NT</option>
-								<option>TAS</option>
-							</select>
-							{ !data.error.state ? "" : alert(data.error.state,"red") }
-						</div>
+						<select onChange={e=> setData({...data,success:false,error:{},state:e.target.value})} value={data.state} className={`${data.error.state ? "border-red-500" : ""} block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4`} id="grid-state" required>
+							<option disabled value="">Select a state</option>
+							<option>ACT</option>
+							<option>QLD</option>
+							<option>NSW</option>
+							<option>NT</option>
+							<option>SA</option>
+							<option>VIC</option>
+							<option>TAS</option>
+							<option>WA</option>
+						</select>
+						{ !data.error.state ? "" : alert(data.error.state,"red") }
 					</div>
+					<br />
 					<div class="md:w-1/2 px-3">
 						<label class="block uppercase tracking-wide text-grey-darker text-base font-bold mb-2">
 							Postcode *
@@ -156,13 +233,59 @@ const MembershipSignup = (props) => {
 						{ !data.error.postCode ? "" : alert(data.error.postCode,"red") }
 					</div>
 				</div>
+				<div class="-mx-3 md:flex mb-2">
+					<img src="https://leadershipmemphis.org/wp-content/uploads/2020/08/780370.png" alt="Payment Types accepted" class="h-8 ml-3"/>
+				</div>
+				<div class="-mx-3 md:flex mb-2">
+					<div class="md:w-1/2 px-3">
+						<label class="block uppercase tracking-wide text-grey-darker text-base font-bold mb-2">
+							Subscription Length *
+						</label>
+						<select onChange={e=> setData({...data,success:false,error:{},amount:e.target.value,duration:priceToDuration[e.target.value]})} className="block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4" value={data.amount} id="grid-amount" required>
+							<option value={2495}>1 year - $24.95</option>
+							<option value={4490}>2 year - $44.90</option>
+						</select>
+					</div>
+				</div>
+				<div class="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
+					<label class="block uppercase tracking-wide text-grey-darker text-base font-bold mb-2">
+						Card Details *
+					</label>
+					<label>
+						<CardElement
+						options={options}
+						onReady={() => {
+							console.log("CardElement [ready]");
+						}}
+						onChange={event => {
+							console.log("CardElement [change]", event);
+						}}
+						onBlur={() => {
+							console.log("CardElement [blur]");
+						}}
+						onFocus={() => {
+							console.log("CardElement [focus]");
+						}}
+						/>
+					</label>
+					{ !data.error.card ? "" : alert(data.error.card,"red") }
+				</div>
 				<div className="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
-					<button onClick={() => formSubmit()} style={{background: '#303031'}} type="submit" className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2">Complete Registration</button>
+					<button style={{background: '#303031'}} type="submit" className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2">Complete Registration</button>
 				</div>
 			</div>
-		</Fragment>
+	</form>
+	</Fragment>
 	)
 
 }
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_DEV_PUBLIC_KEY);
+
+const MembershipSignup = () => (
+	<Elements stripe={stripePromise}>
+	  <MembershipForm />
+	</Elements>
+);
 
 export default MembershipSignup;

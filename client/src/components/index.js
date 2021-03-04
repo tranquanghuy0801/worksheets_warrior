@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, ProductByCategoryDescriptor, Membership, WishList, ProtectedRoute, AdminProtectedRoute, CartProtectedRoute, PageNotFound } from "./shop";
+import { Home, ProductByCategoryDescriptor, Membership, WishList, ProtectedRoute, AdminProtectedRoute, PageNotFound } from "./shop";
 import { DashboardAdmin, Categories, Products } from "./admin";
 import { UserProfile, SettingUser } from './shop/dashboardUser';
 

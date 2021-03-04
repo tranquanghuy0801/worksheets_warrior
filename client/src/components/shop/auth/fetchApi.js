@@ -5,7 +5,17 @@ export const isAuthenticate = () => localStorage.getItem("jwt") ? JSON.parse(loc
 
 export const isAdmin = () => localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).user.role === 1 : false
 
-export const isPaid = () => localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).user.paid === "true" : false
+export const isPaid = () => {
+    if (localStorage.getItem("jwt")) {
+        if (JSON.parse(localStorage.getItem("jwt")).user.role === 1) {
+            return true;
+        } else {
+            return JSON.parse(localStorage.getItem("jwt")).user.paid === "true" ? true : false;
+        }
+    } else {
+        return false
+    }
+}
 
 export const loginReq = async ({ email, password }) => {
     const data = { email, password }
@@ -17,10 +27,10 @@ export const loginReq = async ({ email, password }) => {
     }
 }
 
-export const signupReq = async (data) => {
+export const signupReq = async (data, paymentID) => {
     console.log(data)
     try {
-        let res = await axios.post(`${apiURL}/api/signup`, data)
+        let res = await axios.post(`${apiURL}/api/signup`, { data, paymentID})
         return res.data
     } catch (error) {
         console.log(error);

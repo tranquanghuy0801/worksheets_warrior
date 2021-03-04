@@ -10,7 +10,7 @@ const DashboardCard = (props) => {
 
     useEffect(() => {
         GetAllData(dispatch)
-    }, [])
+    }, [dispatch])
 
     return (
         <Fragment>

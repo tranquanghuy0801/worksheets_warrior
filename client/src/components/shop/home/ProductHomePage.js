@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useContext } from 'react';
-import { useHistory } from "react-router-dom";
 import { getAllProduct } from "../../admin/products/FetchApi";
 import { HomeContext } from "./index";
 import { groupProductsByThirdDescriptor } from "./Mixins";
@@ -9,10 +8,9 @@ const ProductHomePage = (props) => {
 
 		const { data, dispatch } = useContext(HomeContext)
 		const { products } = data
-		const history = useHistory()
 
 		useEffect(() => {
-				fetchData()
+			fetchData()
 		}, [])
 
 		const fetchData = async () => {
@@ -40,7 +38,7 @@ const ProductHomePage = (props) => {
 						? groupProductsByThirdDescriptor(products).map((descriptor, dIndex)=> {
 							return (
 								<Fragment key={descriptor.id}>
-									<div className="p-6 text-md md:text-lg text-gray-700">
+									<div className="border-l-4 border-red-700 p-3 text-md md:text-lg text-gray-700">
 										<h1>{descriptor.name}</h1>
 									</div>
 									<div className="container mx-auto p-8">	
@@ -58,7 +56,8 @@ const ProductHomePage = (props) => {
 										}
 										</div>
 									</div>
-									<hr />
+									<hr className="text-gray-700"/>
+									<br />
 								</Fragment>
 							)
 						})

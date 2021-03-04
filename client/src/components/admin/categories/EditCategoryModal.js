@@ -14,7 +14,7 @@ const EditCategoryModal = (props) => {
         setDes(data.editCategoryModal.des)
         setStatus(data.editCategoryModal.status)
         setCid(data.editCategoryModal.cId)
-    }, [data.editCategoryModal.modal])
+    }, [data.editCategoryModal.cId, data.editCategoryModal.des, data.editCategoryModal.modal, data.editCategoryModal.status])
 
     const fetchData = async () => {
         let responseData = await getAllCategory();

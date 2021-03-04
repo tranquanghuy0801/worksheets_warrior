@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect, useCallback } from 'react';
 import { getAllCategory, deleteCategory } from "./FetchApi";
 import { CategoryContext } from "./index";
 import moment from "moment";
@@ -12,9 +12,9 @@ const AllCategory = (props) => {
 
 		useEffect(() => {
 				fetchData();
-		}, [])
+		}, [fetchData])
 
-		const fetchData = async () => {
+		const fetchData = useCallback(async () => {
 				dispatch({ type: "loading", payload: true })
 				let responseData = await getAllCategory();
 				setTimeout(() => {
@@ -23,7 +23,7 @@ const AllCategory = (props) => {
 								dispatch({ type: "loading", payload: false })
 						}
 				}, 1000)
-		}
+		})
 
 		const deleteCategoryReq = async (cId) => {
 				let deleteC = await deleteCategory(cId);

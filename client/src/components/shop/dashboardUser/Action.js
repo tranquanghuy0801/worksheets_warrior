@@ -45,6 +45,7 @@ export const updatePersonalInformationAction = async (dispatch, fData, setFdata)
     	uId: fData.id,
         firstName: fData.firstName,
         lastName: fData.lastName,
+        address: fData.address,
         city: fData.city,
         state: fData.state,
         postCode: fData.postCode

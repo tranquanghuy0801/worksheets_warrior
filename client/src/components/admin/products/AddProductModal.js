@@ -9,7 +9,6 @@ import TagsInput from './TagsInput';
 const AddProductDetail = ({ categories }) => {
 
 		const { data, dispatch } = useContext(ProductContext);
-		const [subjectSelected, setSubjectSelected] = useState(false);
 		const [descriptorSelected, setDescriptorSelected] = useState(false);
 		const [descriptorContent1, setContent1] = useState([]);
 		const [descriptorContent2, setContent2] = useState([]);
@@ -300,20 +299,19 @@ const AddProductDetail = ({ categories }) => {
 
 const AddProductModal = (props) => {
 
-		let isMounted = true; // note this flag denote mount status
 		useEffect(() => {
+			let isMounted = true; // note this flag denote mount status
+			const fetchCategoryData = async () => {
+				let responseData = await getAllCategory();
+				if (responseData.Categories && isMounted) {
+					setAllCat(responseData.Categories)
+				}
+			}
 			fetchCategoryData()
 			return () => { isMounted = false };
 		}, [])
 
 		const [allCat, setAllCat] = useState({})
-
-		const fetchCategoryData = async () => {
-			let responseData = await getAllCategory();
-			if (responseData.Categories && isMounted) {
-					setAllCat(responseData.Categories)
-			}
-		}	
 
 		return (
 				<Fragment>

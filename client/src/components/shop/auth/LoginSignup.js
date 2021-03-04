@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from 'react';
 import Login from "./Login";
 import { LayoutContext } from "../index";
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const LoginSignup = (props) => {
 

@@ -12,18 +12,20 @@ const ProfileComponent = () => {
         id: "",
         firstName: "",
 		lastName: "",
+		address: "",
 		city: "",
 		state: "",
 		postCode: "",
         email: "",
+		expiredDate: "",
         success: false,
 		message: false
     })
 
     useEffect(() => {
-        setFdata({ ...fData, id: userDetails._id, firstName: userDetails.firstName, lastName: userDetails.lastName, 
-			email: userDetails.email, city: userDetails.city, state: userDetails.state, postCode: userDetails.postCode })
-    }, [userDetails])
+        setFdata({ ...fData, id: userDetails._id, firstName: userDetails.firstName, lastName: userDetails.lastName, address: userDetails.address,
+			email: userDetails.email, city: userDetails.city, state: userDetails.state, postCode: userDetails.postCode, expiredDate: new Date(userDetails.expiredDate).toDateString() })
+    }, [fData, userDetails])
 
     const handleSubmit = () => {
         updatePersonalInformationAction(dispatch, fData, setFdata)
@@ -59,6 +61,10 @@ const ProfileComponent = () => {
 							<span className="text-xs text-gray-500">You can't change your email</span>
 						</div>
 						<div className="flex flex-col space-y-2">
+							<label htmlFor="address">Address</label>
+							<input onChange={e=> setFdata({...fData,address:e.target.value})} value={fData.address} type="text" id="address" className="border px-4 py-2 w-full focus:outline-none" />
+						</div>
+						<div className="flex flex-col space-y-2">
 							<label htmlFor="city">City</label>
 							<input onChange={e=> setFdata({...fData,city:e.target.value})} value={fData.city} type="text" id="city" className="border px-4 py-2 w-full focus:outline-none" />
 						</div>
@@ -77,8 +83,8 @@ const ProfileComponent = () => {
 							</select>
 						</div>
 						<div className="flex flex-col space-y-2">
-							<label htmlFor="postCode">Postcode</label>
-							<input onChange={e=> setFdata({...fData,postCode:e.target.value})} value={fData.postCode} type="text" id="postCode" className="border px-4 py-2 w-full focus:outline-none" />
+							<label htmlFor="postCode">Membership Expiration</label>
+							<input value={fData.expiredDate} readOnly type="text" id="postCode" className="border px-4 py-2 w-full focus:outline-none" />
 						</div>
 						<div onClick={e=> handleSubmit()} style={{background: '#303031'}} className="w-full text-center cursor-pointer px-4 py-2 text-gray-100">Update Information</div>
 					</div>

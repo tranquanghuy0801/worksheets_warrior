@@ -13,7 +13,7 @@ const SliderPic = (props) => {
 
 	useEffect(()=> {
 		sliderImages(dispatch)
-	}, [])
+	}, [dispatch])
 
     return (
 		<Fragment>

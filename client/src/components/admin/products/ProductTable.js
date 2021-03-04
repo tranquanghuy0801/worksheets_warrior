@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useState, useCallback } from 'react'
 import { getAllProduct, deleteProduct } from "./FetchApi"
 import moment from "moment"
 import { ProductContext } from "./index"
@@ -14,9 +14,9 @@ const AllProduct = (props) => {
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [fetchData])
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true)
         let responseData = await getAllProduct()
         setTimeout(() => {
@@ -25,7 +25,7 @@ const AllProduct = (props) => {
                 setLoading(false)
             }
         }, 1000)
-    }
+    })
 
     const deleteProductReq = async (pId) => {
         let deleteC = await deleteProduct(pId)

@@ -7,7 +7,6 @@ const Product = () => {
 
     const history = useHistory()
     const [products, setProducts] = useState([])
-    console.log(products);
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -19,7 +18,6 @@ const Product = () => {
         let responseData = await wishListProducts()
         setTimeout(() => {
             if (responseData && responseData.Products) {
-                console.log(responseData.Products);
                 setProducts(responseData.Products)
                 setLoading(false)
             }

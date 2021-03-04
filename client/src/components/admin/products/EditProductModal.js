@@ -4,7 +4,6 @@ import { editProduct, getAllProduct } from "./FetchApi";
 import { getDescriptorFirst, getDescriptorSecond, getDescriptorThird } from "../../../Mixins/fetchDescriptor";
 import { getAllCategory } from "../categories/FetchApi";
 import TagsInput from './TagsInput';
-const apiURL = process.env.REACT_APP_API_URL
 
 const EditProductModal = (props) => {
     const { data, dispatch } = useContext(ProductContext);
@@ -34,10 +33,14 @@ const EditProductModal = (props) => {
         success: false,
     })
 
-    let isMounted = true; // note this flag denote mount status
-
     useEffect(() => {
-        isMounted = true;
+        let isMounted = true;
+        const fetchCategoryData = async () => {
+            let responseData = await getAllCategory();
+            if (responseData.Categories && isMounted) {
+              setCategories(responseData.Categories)
+            }
+        }
         fetchCategoryData()
         return () => { isMounted = false };
     }, [])
@@ -75,15 +78,8 @@ const EditProductModal = (props) => {
 			}, 1000)
 		}
 
-    const fetchCategoryData = async () => {
-        let responseData = await getAllCategory();
-        if (responseData.Categories && isMounted) {
-          setCategories(responseData.Categories)
-        }
-    }
-
     useEffect(() => {
-      isMounted = true;
+      let isMounted = true;
       if (isMounted) {
         setEditformdata({
             pId: data.editProductModal.pId,

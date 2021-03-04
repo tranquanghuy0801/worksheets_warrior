@@ -17,7 +17,7 @@ const Search = () => {
 			setTimeout(async () => {
 				let responseData = await getAllProduct();
 				if (responseData && responseData.Products) {
-					if (mode == 'search') {
+					if (mode === 'search') {
 						dispatch({ type: "searchHandleInReducer", payload: search, productArray: responseData.Products })
 					} else {
 						dispatch({ type: "setProducts", payload:  responseData.Products})

@@ -9,6 +9,11 @@
     transition: all 1s;
 }
 
+.scroll-hidden::-webkit-scrollbar {
+    height: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
+
 li>ul                 { transform: translatex(100%) scale(0) }
 li:hover>ul           { transform: translatex(101%) scale(1) }
 li > button svg       { transform: rotate(-90deg) }

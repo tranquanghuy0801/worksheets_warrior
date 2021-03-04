@@ -1,4 +1,4 @@
-import React, { Fragment, createContext, useReducer } from 'react';
+import React, { Fragment } from 'react';
 import Layout from "../layout";
 import MembershipSignup from "./MembershipSignup";
 

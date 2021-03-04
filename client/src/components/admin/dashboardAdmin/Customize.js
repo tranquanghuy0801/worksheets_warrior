@@ -59,7 +59,7 @@ const AllImages = () => {
 
 		useEffect(() => {
 				sliderImages(dispatch)
-		}, [])
+		}, [dispatch])
 
 		const deleteImageReq = (id) => {
 				deleteImage(id, dispatch)
