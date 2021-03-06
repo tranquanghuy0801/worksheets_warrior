@@ -24,13 +24,21 @@ Creating uploads folder in server directory
 mkdir public && mkdir public/uploads && mkdir public/uploads/categories && mkdir public/uploads/customize && mkdir public/uploads/worksheets && mkdir public/uploads/worksheets-images
 ```
 
-Create .env in the main directory with template below (Create an account on [Braintree](https://www.braintreepayments.com/sandbox?referrer=https%3A%2F%2Fwww.google.com%2F) to get Sandbox credentials)
+Create .env in the main directory with template below (Create an account on [Braintree](https://www.braintreepayments.com/sandbox?referrer=https%3A%2F%2Fwww.google.com%2F) and [Stripe](https://stripe.com/) to get Sandbox credentials)
 ```
 DATABASE=mongodb://localhost/ecommerce
 PORT=8000
 BRAINTREE_MERCHANT_ID=***
 BRAINTREE_PUBLIC_KEY=***
 BRAINTREE_PRIVATE_KEY=***
+STRIPE_DEV_PUBLIC_KEY=***
+STRIPE_DEV_SECRET_KEY=***
+```
+
+Create .env in the client directory with the template below
+```
+REACT_APP_API_URL=http://localhost:8000
+REACT_APP_STRIPE_DEV_PUBLIC_KEY=***
 ```
 
 ### Running the app
@@ -47,6 +55,9 @@ npm run start:client
 ```
 
 ### Running the tests
+```
+npm run test
+```
 
 ### Deployment
 
@@ -54,7 +65,8 @@ Run these commands to build the client directory and run on the server
 
 ```
 npm run build:client
-npm run start:server
+npm install pm2
+pm2 start server/app.js
 ```
 
 ### Built With
