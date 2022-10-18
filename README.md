@@ -1,5 +1,7 @@
 # Worksheets Warrior
 
+The website can be accessed from [this link](http://178.128.94.112:8000)
+
 ![Admin Page](readme-images/admin_page.png)
 
 ![User Page](readme-images/main_page.png)
